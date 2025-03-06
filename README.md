@@ -1,6 +1,6 @@
 # Taste This
 
-#### A simple application for exploring and discovering places to eat.
+#### Your guide to the most recommended dishes.
 
 ## Technology Stack and Features
 
@@ -18,6 +18,10 @@
 - **AI Integration:**
     - [LangChain](https://js.langchain.com) for AI capabilities.
     - [Google Generative AI](https://ai.google.dev) integration.
+
+## Preview
+
+<img src="preview.png" alt="Taste This Preview" width="600" align="center"/>
 
 ## Project Structure
 ```
