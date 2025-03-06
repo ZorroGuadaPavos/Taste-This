@@ -1,0 +1,26 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"files": {
+		"ignore": ["node_modules", "src/routeTree.gen.ts", "frontend/src/client", "src/client", "*/src/client"]
+	},
+	"linter": {
+		"enabled": true,
+		"ignore": ["frontend/src/client"],
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off"
+			}
+		}
+	},
+	"formatter": {
+		"lineWidth": 120
+	}
+}

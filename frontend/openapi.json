@@ -1,0 +1,141 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Google Maps Reviews API",
+    "version": "1.0.0",
+    "description": "API for scraping reviews from Google Maps"
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "API v1"
+    }
+  ],
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/analysis": {
+      "get": {
+        "tags": ["analysis"],
+        "summary": "Find popular dishes from restaurant reviews",
+        "description": "Analyzes restaurant reviews to identify the most popular dishes mentioned",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "The name of the restaurant to analyze"
+            },
+            "required": true,
+            "description": "The name of the restaurant to analyze",
+            "name": "query",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Popular dishes analysis completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "query": {
+                      "type": "string"
+                    },
+                    "totalReviewsAnalyzed": {
+                      "type": "number"
+                    },
+                    "popularDishes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the dish"
+                          },
+                          "mentions": {
+                            "type": "number",
+                            "description": "Number of mentions in reviews"
+                          },
+                          "rating": {
+                            "type": "number",
+                            "description": "Average rating for this dish (0-5)"
+                          },
+                          "sentimentScore": {
+                            "type": "number",
+                            "minimum": -1,
+                            "maximum": 1,
+                            "description": "Sentiment score for this dish"
+                          },
+                          "reviewExcerpts": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Excerpts from reviews mentioning this dish"
+                          }
+                        },
+                        "required": ["name", "mentions", "rating", "sentimentScore", "reviewExcerpts"]
+                      }
+                    }
+                  },
+                  "required": ["success", "query", "totalReviewsAnalyzed", "popularDishes"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request or analysis error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "query": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "query", "error"]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "query": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "query", "error"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
