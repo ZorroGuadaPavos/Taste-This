@@ -21,7 +21,9 @@
 
 ## Preview
 
-<img src="preview.png" alt="Taste This Preview" width="600" align="center"/>
+<p align="center">
+  <img src="preview.png" alt="Taste This Preview" width="500"/>
+</p>
 
 ## Project Structure
 ```
