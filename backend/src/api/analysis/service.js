@@ -6,7 +6,7 @@ import { searchPlaceById } from "../../scraper/searchPlaceById.js";
 export async function fetchRestaurantReviews(query) {
 	const placeUrl = await searchPlaceById(query);
 	const reviews = await scraper(placeUrl, { sort_type: "relevant", pages: "3", clean: true });
-	saveResponseData({ query, placeUrl, reviewsLength: reviews.length, reviews }, "reviews");
+	// saveResponseData({ query, placeUrl, reviewsLength: reviews.length, reviews }, "reviews");
 
 	if (reviews === 0 || reviews.length === 0) {
 		return {
