@@ -9,6 +9,7 @@
     "format": "biome format . --write"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "@hono/swagger-ui": "^0.5.1",
     "@hono/zod-openapi": "^0.19.2",
     "@hono/zod-validator": "^0.4.3",
