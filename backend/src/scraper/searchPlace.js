@@ -27,7 +27,6 @@ export async function searchPlace(placeName) {
 
 	if (matches && matches.length > 0) {
 		const match = matches[0];
-		console.log("match", match);
 		return `https://www.google.com/maps/place/${encodedQuery}/@0,0,15z/data=!4m5!3m4!1s${match}!8m2!3d0!4d0`;
 	}
 

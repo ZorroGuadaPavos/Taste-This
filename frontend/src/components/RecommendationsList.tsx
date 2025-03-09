@@ -15,14 +15,15 @@ function RecommendationsListComponent({ recommendations, place }: Recommendation
 	}
 
 	const filteredAndSortedDishes = recommendations.popularDishes
-		? [...recommendations.popularDishes]
-				// .filter((dish) => dish.sentimentScore >= 1)
-				.sort((a, b) => {
-					if (b.mentions !== a.mentions) {
-						return b.mentions - a.mentions;
-					}
-					return b.sentimentScore - a.sentimentScore;
-				})
+		? [...recommendations.popularDishes].sort((a, b) => {
+				if (b.rating !== a.rating) {
+					return b.rating - a.rating;
+				}
+				if (b.mentions !== a.mentions) {
+					return b.mentions - a.mentions;
+				}
+				return b.sentimentScore - a.sentimentScore;
+			})
 		: [];
 
 	const hasPopularDishes = filteredAndSortedDishes.length > 0;
