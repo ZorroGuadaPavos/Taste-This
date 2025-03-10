@@ -70,6 +70,7 @@ function LandingPage() {
 			setRestaurant(place.name);
 			const cid = place.googleMapsUrl?.split("cid=")[1];
 			cid ? await fetchRecommendations(cid) : await fetchRecommendations(place.name);
+			// return null
 		},
 		[fetchRecommendations],
 	);

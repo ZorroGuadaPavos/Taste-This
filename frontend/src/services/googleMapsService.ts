@@ -46,7 +46,6 @@ export interface PlaceDetails {
 	businessStatus?: string;
 	types?: string[];
 	regularOpeningHours?: {
-		weekdayDescriptions?: string[];
 		openNow?: boolean;
 	};
 	photos?: Array<{
