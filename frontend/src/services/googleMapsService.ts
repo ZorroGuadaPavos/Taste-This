@@ -17,6 +17,7 @@ export interface TextSearchPlace {
 	formattedAddress: string;
 	id?: string;
 	googleMapsUrl?: string;
+	name?: string;
 }
 
 export interface TextSearchResponse {
@@ -33,6 +34,47 @@ export interface TextSearchResult {
 	error?: TextSearchError;
 }
 
+export interface PlaceDetails {
+	id: string;
+	displayName: string;
+	formattedAddress?: string;
+	websiteUri?: string;
+	internationalPhoneNumber?: string;
+	rating?: number;
+	userRatingCount?: number;
+	priceLevel?: number;
+	businessStatus?: string;
+	types?: string[];
+	regularOpeningHours?: {
+		weekdayDescriptions?: string[];
+		openNow?: boolean;
+	};
+	photos?: Array<{
+		name: string;
+		widthPx?: number;
+		heightPx?: number;
+		authorAttributions?: Array<{
+			displayName?: string;
+			uri?: string;
+			photoUri?: string;
+		}>;
+	}>;
+}
+
+export interface PlaceDetailsResponse {
+	place: PlaceDetails;
+}
+
+export interface PlaceDetailsError {
+	type: "error";
+	message: string;
+}
+
+export interface PlaceDetailsResult {
+	data?: PlaceDetailsResponse;
+	error?: PlaceDetailsError;
+}
+
 function extractDisplayName(displayName: DisplayNameObject | string | undefined): string {
 	if (!displayName) return "";
 	if (typeof displayName === "string") return displayName;
@@ -40,9 +82,11 @@ function extractDisplayName(displayName: DisplayNameObject | string | undefined)
 }
 
 function transformPlace(rawPlace: RawPlace): TextSearchPlace {
+	const displayName = extractDisplayName(rawPlace.displayName);
 	return {
 		id: rawPlace.id,
-		displayName: extractDisplayName(rawPlace.displayName),
+		displayName: displayName,
+		name: displayName,
 		formattedAddress: rawPlace.formattedAddress || "",
 		googleMapsUrl: rawPlace.googleMapsUri,
 	};
@@ -73,5 +117,54 @@ export async function searchPlacesByText(query: string): Promise<TextSearchResul
 	} catch (error) {
 		console.error("Error searching places:", error);
 		return { error: { type: "error", message: "An error occurred while searching. Please try again later." } };
+	}
+}
+
+function transformPlaceDetails(rawPlace: any): PlaceDetails {
+	return {
+		id: rawPlace.id || "",
+		displayName: extractDisplayName(rawPlace.displayName),
+		formattedAddress: rawPlace.formattedAddress || "",
+		websiteUri: rawPlace.websiteUri || "",
+		internationalPhoneNumber: rawPlace.internationalPhoneNumber || "",
+		rating: rawPlace.rating,
+		userRatingCount: rawPlace.userRatingCount,
+		priceLevel: rawPlace.priceLevel,
+		businessStatus: rawPlace.businessStatus,
+		types: rawPlace.types || [],
+		regularOpeningHours: rawPlace.regularOpeningHours || {},
+		photos: rawPlace.photos || [],
+	};
+}
+
+export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResult> {
+	if (!placeId.trim()) {
+		return { error: { type: "error", message: "Place ID is required" } };
+	}
+	try {
+		const response = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"X-Goog-Api-Key": GoogleMapsConfig.apiKey,
+				"X-Goog-FieldMask":
+					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,userRatingCount,priceLevel,businessStatus,types,regularOpeningHours,photos",
+			},
+		});
+
+		if (!response.ok) {
+			console.error("Google Maps API error:", await response.json());
+			return { error: { type: "error", message: "Failed to fetch place details. Please try again later." } };
+		}
+
+		const data = await response.json();
+		const place = transformPlaceDetails(data);
+		console.log("place", place);
+		return { data: { place } };
+	} catch (error) {
+		console.error("Error fetching place details:", error);
+		return {
+			error: { type: "error", message: "An error occurred while fetching place details. Please try again later." },
+		};
 	}
 }

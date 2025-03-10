@@ -5,6 +5,7 @@ import { Flex } from "@chakra-ui/react";
 export interface Place {
 	id: string;
 	name: string;
+	displayName?: string;
 	address: string;
 	googleMapsUrl?: string;
 }
@@ -17,8 +18,9 @@ const PlaceData = (googlePlace: google.maps.places.Place): Place => {
 	return {
 		id: googlePlace.id,
 		name: googlePlace.displayName || "",
+		displayName: googlePlace.displayName || "",
 		address: googlePlace.formattedAddress || "",
-		googleMapsUrl: googlePlace.googleMapsURI || undefined,
+		googleMapsUrl: googlePlace.googleMapsURI || "",
 	};
 };
 

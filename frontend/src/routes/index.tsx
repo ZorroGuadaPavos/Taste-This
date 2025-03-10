@@ -2,6 +2,7 @@ import type { GetAnalysisResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Header } from "@/components/Header";
 import { LoadingIndicator } from "@/components/LoadingIndicator";
+import { PlaceDetailsCard } from "@/components/Maps/PlaceDetailsCard";
 import { RestaurantOverview } from "@/components/Maps/RestaurantOverview";
 import type { Place } from "@/components/Maps/RestaurantPicker";
 import { RecommendationsList } from "@/components/RecommendationsList";
@@ -93,7 +94,7 @@ function LandingPage() {
 					onPlaceSelect={handleRestaurantSelect}
 					onClearResults={() => setTextSearchResults(null)}
 				/>
-				{selectedPlace && <RestaurantOverview place={selectedPlace} />}
+				{selectedPlace && <PlaceDetailsCard place={selectedPlace} />}
 				{errorMessage && <ErrorMessage message={errorMessage} type={errorType} />}
 				{renderRecommendations()}
 			</VStack>

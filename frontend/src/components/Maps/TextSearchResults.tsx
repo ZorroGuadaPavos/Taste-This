@@ -28,7 +28,8 @@ export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsPr
 	const handlePlaceSelect = (place: TextSearchPlace) => {
 		const selectedPlace: Place = {
 			id: place.id || "",
-			name: place.displayName || "",
+			name: place.name || place.displayName || "",
+			displayName: place.displayName || "",
 			address: place.formattedAddress || "",
 			googleMapsUrl: place.googleMapsUrl,
 		};
