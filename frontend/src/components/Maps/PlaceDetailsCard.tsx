@@ -1,5 +1,6 @@
 import { GoogleMapsConfig } from "@/config/maps";
 import { type PlaceDetails, getPlaceDetails } from "@/services/googleMapsService";
+import type { Place } from "@/types/Place";
 import {
 	Badge,
 	Box,
@@ -29,7 +30,6 @@ import {
 } from "react-icons/fi";
 import { PlaceDetailsSkeleton } from "./PlaceDetailsSkeleton";
 import { PlacePhotosGallery } from "./PlacePhotosGallery";
-import type { Place } from "./RestaurantPicker";
 
 function PlaceDetailsCardComponent({ place }: { place: Place }) {
 	const [placeDetails, setPlaceDetails] = useState<PlaceDetails | null>(null);

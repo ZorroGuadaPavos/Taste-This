@@ -1,6 +1,6 @@
 import type { TextSearchPlace } from "@/services/googleMapsService";
+import type { Place } from "@/types/Place";
 import { Box } from "@chakra-ui/react";
-import type { Place } from "./RestaurantPicker";
 import { TextSearchResults } from "./TextSearchResults";
 
 interface SearchResultsOverlayProps {

@@ -3,13 +3,12 @@ import { ErrorMessage } from "@/components/ErrorMessage";
 import { Header } from "@/components/Header";
 import { LoadingIndicator } from "@/components/LoadingIndicator";
 import { PlaceDetailsCard } from "@/components/Maps/PlaceDetailsCard";
-import { RestaurantOverview } from "@/components/Maps/RestaurantOverview";
-import type { Place } from "@/components/Maps/RestaurantPicker";
 import { RecommendationsList } from "@/components/RecommendationsList";
 import { Search } from "@/components/Search";
 import { GoogleMapsConfig } from "@/config/maps";
 import { type TextSearchResponse, searchPlacesByText } from "@/services/googleMapsService";
 import { searchRestaurant } from "@/services/restaurantService";
+import type { Place } from "@/types/Place";
 import { Container, VStack } from "@chakra-ui/react";
 import { APILoader } from "@googlemaps/extended-component-library/react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -70,7 +69,6 @@ function LandingPage() {
 			setRestaurant(place.name);
 			const cid = place.googleMapsUrl?.split("cid=")[1];
 			cid ? await fetchRecommendations(cid) : await fetchRecommendations(place.name);
-			// return null
 		},
 		[fetchRecommendations],
 	);

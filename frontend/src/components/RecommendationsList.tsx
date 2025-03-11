@@ -1,9 +1,9 @@
 import type { GetAnalysisResponse } from "@/client";
+import type { Place } from "@/types/Place";
 import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { memo } from "react";
 import { FaUtensils } from "react-icons/fa";
 import { DishCard } from "./DishCard";
-import type { Place } from "./Maps/RestaurantPicker";
 
 interface RecommendationsListProps {
 	recommendations: GetAnalysisResponse;

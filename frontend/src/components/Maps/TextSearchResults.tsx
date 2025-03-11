@@ -1,7 +1,7 @@
 import type { TextSearchPlace } from "@/services/googleMapsService";
+import type { Place } from "@/types/Place";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import type { Place } from "./RestaurantPicker";
 
 interface TextSearchResultsProps {
 	places: TextSearchPlace[];
