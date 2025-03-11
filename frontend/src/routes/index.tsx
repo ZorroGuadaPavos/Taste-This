@@ -2,7 +2,7 @@ import type { GetAnalysisResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Header } from "@/components/Header";
 import { LoadingIndicator } from "@/components/LoadingIndicator";
-import { PlaceDetailsCard } from "@/components/Maps/PlaceDetailsCard";
+import { PlaceDetailsCard } from "@/components/Maps/PlaceDetails";
 import { RecommendationsList } from "@/components/RecommendationsList";
 import { Search } from "@/components/Search";
 import { GoogleMapsConfig } from "@/config/maps";
