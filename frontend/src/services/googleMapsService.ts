@@ -169,7 +169,6 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResu
 
 		const data = await response.json();
 		const place = transformPlaceDetails(data);
-		console.log("place", place);
 		return { data: { place } };
 	} catch (error) {
 		console.error("Error fetching place details:", error);
