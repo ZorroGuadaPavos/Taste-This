@@ -34,6 +34,7 @@ export const SkeletonText = React.forwardRef<HTMLDivElement, SkeletonTextProps>(
           <ChakraSkeleton
             height="4"
             key={index}
+            borderRadius="md"
             {...props}
             _last={{ maxW: "80%" }}
             {...rest}

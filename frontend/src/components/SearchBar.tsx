@@ -12,9 +12,9 @@ export function SearchBar({ restaurant, setRestaurant, handleSearch, isLoading }
 	const isEmpty = !restaurant.trim();
 
 	return (
-		<Box w="100%" maxW="2xl">
+		<Box w="100%" maxW="2xl" mb={6}>
 			<Box position="relative">
-				<Box position="absolute" left="1rem" top="50%" transform="translateY(-50%)" color="gray.500" zIndex="1">
+				<Box position="absolute" left="1rem" top="50%" transform="translateY(-50%)" color="accent.matcha" zIndex="1">
 					<FaSearch />
 				</Box>
 				<Input
@@ -23,32 +23,36 @@ export function SearchBar({ restaurant, setRestaurant, handleSearch, isLoading }
 					value={restaurant}
 					onChange={(e) => setRestaurant(e.target.value)}
 					onKeyDown={(e) => e.key === "Enter" && !isEmpty && handleSearch()}
-					bg="white"
+					bg="bg.input"
 					pl="2.5rem"
-					borderRadius="md"
+					borderRadius="full"
 					borderWidth="2px"
-					borderColor="gray.300"
+					borderColor="bg.200"
 					_focus={{
 						outline: "none",
-						borderColor: "teal.400",
+						borderColor: "accent.lavender",
+						boxShadow: "0 0 0 1px rgba(200, 162, 212, 0.5)",
+					}}
+					_hover={{
+						borderColor: "accent.lavender.light",
 					}}
 					_placeholder={{
-						color: "gray.500",
+						color: "fg.muted",
 						fontSize: "sm",
 						fontWeight: "normal",
 					}}
-					fontSize="sm"
+					fontSize="md"
 					fontWeight="medium"
-					color="gray.800"
-					h="3rem"
+					color="fg.DEFAULT"
+					h="3.2rem"
 					disabled={isLoading}
 					opacity={isLoading ? 0.7 : 1}
 					cursor={isLoading ? "not-allowed" : "text"}
-					boxShadow="md"
+					boxShadow="sm"
 				/>
 				{isLoading && (
-					<Box position="absolute" right="1rem" top="50%" transform="translateY(-50%)" color="teal.500">
-						<Spinner size="sm" color="teal.600" />
+					<Box position="absolute" right="1rem" top="50%" transform="translateY(-50%)" color="accent.lavender">
+						<Spinner size="sm" color="accent.lavender" />
 					</Box>
 				)}
 			</Box>

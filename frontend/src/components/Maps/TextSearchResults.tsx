@@ -11,16 +11,8 @@ interface TextSearchResultsProps {
 export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsProps) {
 	if (!places || places.length === 0) {
 		return (
-			<Box
-				textAlign="center"
-				p={4}
-				borderRadius="md"
-				bg="white"
-				boxShadow="sm"
-				borderWidth="1px"
-				borderColor="gray.200"
-			>
-				<Text color="gray.600">No places found. Try a different search restaurant.</Text>
+			<Box textAlign="center" p={4} borderRadius="xl" bg="bg.box" boxShadow="sm" borderWidth="1px" borderColor="bg.200">
+				<Text color="fg.muted">No places found. Try a different search term.</Text>
 			</Box>
 		);
 	}
@@ -40,44 +32,44 @@ export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsPr
 		<Box
 			w="100%"
 			maxW="2xl"
-			borderWidth="2px"
-			borderRadius="md"
+			borderWidth="1px"
+			borderRadius="xl"
 			overflow="hidden"
-			bg="white"
-			boxShadow="md"
-			borderColor="gray.300"
+			bg="bg.box"
+			boxShadow="sm"
+			borderColor="bg.200"
 		>
 			<Box maxH="350px" overflowY="auto">
 				{places.map((place, index) => (
 					<Box key={place.id || index}>
-						{index > 0 && <Box borderBottomWidth="1px" borderColor="gray.200" />}
+						{index > 0 && <Box borderBottomWidth="1px" borderColor="bg.100" />}
 						<Button
 							variant="ghost"
 							justifyContent="flex-start"
 							alignItems="center"
 							width="100%"
-							py={2}
-							px={3}
+							py={3}
+							px={4}
 							onClick={() => handlePlaceSelect(place)}
 							_hover={{
-								bg: "teal.100",
-								color: "teal.700",
+								bg: "accent.matcha.light",
+								color: "accent.matcha.dark",
 							}}
-							_active={{ bg: "teal.100" }}
+							_active={{ bg: "accent.matcha.light" }}
 							borderRadius={0}
 							height="auto"
 							minH="unset"
 							transition="all 0.2s"
 						>
 							<Flex align="center" width="100%">
-								<Box color="teal.600" mr={2} fontSize="sm">
+								<Box color="accent.sakura" mr={3} fontSize="sm">
 									<FaMapMarkerAlt />
 								</Box>
 								<Box textAlign="left">
-									<Text fontWeight="medium" color="gray.800" fontSize="sm">
+									<Text fontWeight="500" color="fg.DEFAULT" fontSize="sm">
 										{place.displayName}
 									</Text>
-									<Text fontSize="xs" color="gray.600" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
+									<Text fontSize="xs" color="fg.muted" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
 										{place.formattedAddress}
 									</Text>
 								</Box>

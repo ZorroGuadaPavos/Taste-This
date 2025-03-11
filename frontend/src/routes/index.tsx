@@ -84,7 +84,7 @@ function LandingPage() {
 	return (
 		<Container maxW="container.xl" py={10}>
 			<APILoader apiKey={GoogleMapsConfig.apiKey} solutionChannel={GoogleMapsConfig.solutionChannel} />
-			<VStack gap={8} align="center">
+			<VStack gap={5} align="center">
 				<Header />
 				<Search
 					restaurant={restaurant}

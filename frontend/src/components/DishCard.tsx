@@ -1,6 +1,5 @@
 import { Tooltip } from "@/components/ui/tooltip";
 import { Box, Flex, HStack, Heading, Text } from "@chakra-ui/react";
-import { FaFire } from "react-icons/fa";
 import type { Dish } from "./types";
 
 interface DishCardProps {
@@ -15,45 +14,58 @@ export function DishCard({ dish }: DishCardProps) {
 
 	const mentionLevel = getMentionLevel(dish.mentions || 0);
 
-	const getIconColor = (level: number) => {
-		if (level >= 8) return "#E53E3E"; // Red - hot!
-		if (level >= 6) return "#DD6B20"; // Orange - very popular
-		if (level >= 4) return "#D69E2E"; // Yellow - popular
-		if (level >= 2) return "#38A169"; // Green - mentioned
-		return "#718096"; // Gray - barely mentioned
-	};
-
 	return (
 		<Box
 			p={5}
-			shadow="md"
 			borderWidth="1px"
-			borderRadius="md"
-			_hover={{ shadow: "lg", borderColor: "teal.300" }}
-			transition="all 0.2s"
+			borderRadius="xl"
+			borderColor="bg.200"
+			bg="bg.box"
+			transition="all 0.2s ease"
+			position="relative"
+			overflow="hidden"
 		>
-			<Flex justify="space-between" align="center">
-				<Heading fontSize="xl" textTransform="capitalize">
+			{mentionLevel >= 6 && (
+				<Box
+					position="absolute"
+					top={0}
+					right={0}
+					bg="accent.sakura"
+					color="white"
+					px={2}
+					py={1}
+					fontSize="xs"
+					fontWeight="bold"
+					borderBottomLeftRadius="md"
+				>
+					Popular
+				</Box>
+			)}
+
+			<Flex justify="space-between" align="center" mb={3}>
+				<Heading fontSize="xl" textTransform="capitalize" fontWeight="600" color="fg.DEFAULT">
 					{dish.name}
 				</Heading>
 				<HStack gap={2}>
-					{mentionLevel > 0 && (
-						<Tooltip content={`Popularity: ${mentionLevel}/10`}>
-							<Box fontSize="1.2em" color={getIconColor(mentionLevel)}>
-								<FaFire />
-							</Box>
-						</Tooltip>
-					)}
 					<Tooltip content="Average rating from reviews">
-						<Box bg="teal.500" color="white" px={2} py={1} borderRadius="md" fontWeight="bold">
-							{dish.rating.toFixed(1)}/5
+						<Box
+							bg="accent.matcha.light"
+							color="accent.matcha.dark"
+							px={2}
+							py={1}
+							borderRadius="md"
+							fontSize="sm"
+							fontWeight="bold"
+						>
+							{dish.rating.toFixed(1)}
 						</Box>
 					</Tooltip>
 				</HStack>
 			</Flex>
+
 			{dish.reviewExcerpts.length > 0 && (
-				<Box mt={3} p={3} bg="gray.50" borderRadius="lg">
-					<Text fontStyle="italic" fontSize="sm">
+				<Box mt={3} p={3} bg="bg.50" borderRadius="lg" borderLeft="3px solid" borderColor="accent.lavender.light">
+					<Text fontStyle="italic" fontSize="sm" color="fg.muted">
 						"{dish.reviewExcerpts[0]}"
 					</Text>
 				</Box>

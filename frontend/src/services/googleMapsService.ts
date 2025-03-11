@@ -41,7 +41,6 @@ export interface PlaceDetails {
 	websiteUri?: string;
 	internationalPhoneNumber?: string;
 	rating?: number;
-	userRatingCount?: number;
 	priceLevel?: number;
 	businessStatus?: string;
 	types?: string[];
@@ -127,7 +126,6 @@ function transformPlaceDetails(rawPlace: any): PlaceDetails {
 		websiteUri: rawPlace.websiteUri || "",
 		internationalPhoneNumber: rawPlace.internationalPhoneNumber || "",
 		rating: rawPlace.rating,
-		userRatingCount: rawPlace.userRatingCount,
 		priceLevel: rawPlace.priceLevel,
 		businessStatus: rawPlace.businessStatus,
 		types: rawPlace.types || [],
@@ -147,7 +145,7 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResu
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": GoogleMapsConfig.apiKey,
 				"X-Goog-FieldMask":
-					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,userRatingCount,priceLevel,businessStatus,types,regularOpeningHours,photos",
+					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,businessStatus,types,regularOpeningHours,photos",
 			},
 		});
 

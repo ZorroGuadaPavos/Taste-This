@@ -58,6 +58,7 @@ export function PlacePhotosGallery({ photos, placeName }: PlacePhotosGalleryProp
           width="100%"
           height="100%"
           transition="opacity 0.3s ease-in-out"
+          borderRadius="xl"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.style.display = "none";
@@ -94,7 +95,7 @@ export function PlacePhotosGallery({ photos, placeName }: PlacePhotosGalleryProp
               key={photo.name}
               position="relative"
               height="5rem"
-              borderRadius="md"
+              borderRadius="xl"
               overflow="hidden"
               transition="all 0.2s"
               cursor="pointer"
