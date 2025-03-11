@@ -42,6 +42,18 @@ export interface PlaceDetails {
 	internationalPhoneNumber?: string;
 	rating?: number;
 	priceLevel?: number;
+	priceRange?: {
+		startPrice?: {
+			currencyCode?: string;
+			units?: string;
+			nanos?: number;
+		};
+		endPrice?: {
+			currencyCode?: string;
+			units?: string;
+			nanos?: number;
+		};
+	};
 	businessStatus?: string;
 	types?: string[];
 	regularOpeningHours?: {
@@ -127,6 +139,7 @@ function transformPlaceDetails(rawPlace: any): PlaceDetails {
 		internationalPhoneNumber: rawPlace.internationalPhoneNumber || "",
 		rating: rawPlace.rating,
 		priceLevel: rawPlace.priceLevel,
+		priceRange: rawPlace.priceRange || undefined,
 		businessStatus: rawPlace.businessStatus,
 		types: rawPlace.types || [],
 		regularOpeningHours: rawPlace.regularOpeningHours || {},
@@ -145,7 +158,7 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResu
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": GoogleMapsConfig.apiKey,
 				"X-Goog-FieldMask":
-					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,businessStatus,types,regularOpeningHours,photos",
+					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,priceRange,businessStatus,types,regularOpeningHours,photos",
 			},
 		});
 
