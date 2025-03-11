@@ -11,6 +11,12 @@ importers:
       '@chakra-ui/react':
         specifier: ^3.8.0
         version: 3.8.1(@emotion/react@11.14.0(@types/react@19.0.10)(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@emotion/react':
+        specifier: ^11.14.0
+        version: 11.14.0(@types/react@19.0.10)(react@19.0.0)
+      '@fontsource/quicksand':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@googlemaps/extended-component-library':
         specifier: ^0.6.13
         version: 0.6.13(@types/react@19.0.10)
@@ -602,6 +608,9 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fontsource/quicksand@5.2.5':
+    resolution: {integrity: sha512-V8/RSjgRrLWRqAM0oyLwOWDITf8a9B4mM2RiEZhP6ZVORdXyOWur+MEL908syPi3AiNj90qh2/0d41+bY3LgAQ==}
 
   '@googlemaps/extended-component-library@0.6.13':
     resolution: {integrity: sha512-rOIwru+MYsDWkRUzEtOQ+Akf2K70thqodkDs7f69uoF2L2FT2EDZDvv7hrvhD3ctFQToB0qRyRTIfNsCWX6z/w==}
@@ -2316,6 +2325,8 @@ snapshots:
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@fontsource/quicksand@5.2.5': {}
 
   '@googlemaps/extended-component-library@0.6.13(@types/react@19.0.10)':
     dependencies:
