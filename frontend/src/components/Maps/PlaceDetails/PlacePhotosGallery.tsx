@@ -1,5 +1,5 @@
 import { GoogleMapsConfig } from "@/config/maps";
-import { Box, Flex, HStack, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, SimpleGrid, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 export interface Photo {

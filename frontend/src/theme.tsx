@@ -1,4 +1,4 @@
-import { createSystem, defaultConfig, defineConfig, defineTextStyles } from "@chakra-ui/react";
+import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
 // export const textStyles = defineTextStyles({
 // 	body: {

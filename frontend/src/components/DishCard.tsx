@@ -1,6 +1,13 @@
 import { Tooltip } from "@/components/ui/tooltip";
 import { Box, Flex, HStack, Heading, Text } from "@chakra-ui/react";
-import type { Dish } from "./types";
+
+type Dish = {
+	name: string;
+	mentions: number;
+	rating: number;
+	sentimentScore: number;
+	reviewExcerpts: string[];
+};
 
 interface DishCardProps {
 	dish: Dish;
