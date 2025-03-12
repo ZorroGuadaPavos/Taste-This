@@ -1,6 +1,6 @@
 import { type PlaceDetails, getPlaceDetails } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
-import { Box, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { memo, useEffect, useRef, useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import { PlaceDetailHeader } from "./PlaceDetailHeader";
@@ -54,50 +54,42 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 			transition="all 0.3s ease"
 			position="relative"
 		>
-			{/* Header section with restaurant name and rating that is always visible */}
 			<PlaceDetailHeader placeDetails={placeDetails} open={open} onToggle={onToggle} />
 
-			{/* Content container with fixed height */}
-			<Box
-				ref={detailsRef}
-				height="auto"
-				overflow="hidden"
-				transition="height 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
-				position="relative"
-			>
-				<Grid
-					templateColumns={open ? { base: "1fr", md: "1fr 1fr" } : "1fr"}
-					gap={4}
-					transition="all 0.4s ease"
-					height="100%"
-				>
-					{/* Photos column */}
-					<GridItem
-						order={open ? { base: 2, md: 1 } : 1}
-						width="100%"
-						transition="all 0.4s ease"
-						px={5}
-						pb={5}
-						pt={open ? 0 : 5}
-						display="flex"
-						alignItems="center"
-					>
+			<Box ref={detailsRef} height={{ base: "auto", md: "20rem" }} overflow="hidden" position="relative">
+				{open ? (
+					// Open state: Simple two-column layout with photo on left, details on right
+					<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
+						<Flex
+							flex={{ base: "none", md: 1 }}
+							p={3}
+							align="center"
+							justify="center"
+							height={{ base: "12rem", md: "100%" }}
+							minWidth={{ md: "45%" }}
+							maxWidth={{ md: "50%" }}
+						>
+							{placeDetails.photos && placeDetails.photos.length > 0 && (
+								<Box width="100%" borderRadius="lg" overflow="hidden" height="100%">
+									<PlacePhotosGallery photos={placeDetails.photos} placeName={placeDetails.displayName} isOpen={true} />
+								</Box>
+							)}
+						</Flex>
+
+						<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
+							<PlaceDetailsContent placeDetails={placeDetails} open={open} />
+						</Flex>
+					</Flex>
+				) : (
+					// Closed state: Show the full gallery layout
+					<Box p={3} height="100%">
 						{placeDetails.photos && placeDetails.photos.length > 0 && (
-							<Box
-								width="100%"
-								borderRadius="lg"
-								overflow="hidden"
-								boxShadow={open ? "sm" : "none"}
-								height={open ? { base: "180px", md: "220px" } : "250px"}
-							>
-								<PlacePhotosGallery photos={placeDetails.photos} placeName={placeDetails.displayName} />
+							<Box width="100%" height="100%" borderRadius="lg" overflow="hidden">
+								<PlacePhotosGallery photos={placeDetails.photos} placeName={placeDetails.displayName} isOpen={false} />
 							</Box>
 						)}
-					</GridItem>
-
-					{/* Details column - only visible when expanded */}
-					{open && <PlaceDetailsContent placeDetails={placeDetails} open={open} />}
-				</Grid>
+					</Box>
+				)}
 			</Box>
 		</Box>
 	);

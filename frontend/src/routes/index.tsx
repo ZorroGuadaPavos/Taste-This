@@ -1,7 +1,7 @@
 import type { GetAnalysisResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Header } from "@/components/Header";
-import { LoadingIndicator } from "@/components/LoadingIndicator";
+import { LoaderReviews } from "@/components/LoaderReviews";
 import { PlaceDetailsCard } from "@/components/Maps/PlaceDetails";
 import { RecommendationsList } from "@/components/RecommendationsList";
 import { Search } from "@/components/Search";
@@ -74,7 +74,7 @@ function LandingPage() {
 	);
 
 	const renderRecommendations = () => {
-		if (isLoading) return <LoadingIndicator />;
+		if (isLoading) return <LoaderReviews />;
 		if (selectedPlace && recommendations)
 			return <RecommendationsList recommendations={recommendations} place={selectedPlace} />;
 	};

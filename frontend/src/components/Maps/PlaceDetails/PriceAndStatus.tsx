@@ -33,7 +33,6 @@ export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndSt
 	};
 
 	const formatPriceRange = (range?: PriceAndStatusProps["priceRange"], level?: number) => {
-		// If we have priceRange, use it
 		if (range?.startPrice) {
 			const getCurrencySymbol = (currencyCode?: string) => {
 				switch (currencyCode) {

@@ -12,13 +12,13 @@ export function SearchBar({ restaurant, setRestaurant, handleSearch, isLoading }
 	const isEmpty = !restaurant.trim();
 
 	return (
-		<Box w="100%" maxW="2xl" mb={6}>
+		<Box w="100%" maxW="2xl">
 			<Box position="relative">
 				<Box position="absolute" left="1rem" top="50%" transform="translateY(-50%)" color="accent.matcha" zIndex="1">
 					<FaSearch />
 				</Box>
 				<Input
-					placeholder="Search for restaurants or food types..."
+					placeholder="Search for a restaurant"
 					size="lg"
 					value={restaurant}
 					onChange={(e) => setRestaurant(e.target.value)}

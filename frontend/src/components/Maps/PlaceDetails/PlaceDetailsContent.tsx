@@ -1,5 +1,5 @@
 import type { PlaceDetails } from "@/services/googleMapsService";
-import { GridItem, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { FiGlobe, FiPhone } from "react-icons/fi";
 import { Categories } from "./Categories";
 import { PriceAndStatus } from "./PriceAndStatus";
@@ -11,13 +11,15 @@ interface PlaceDetailsContentProps {
 
 export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentProps) {
 	return (
-		<GridItem
-			p={5}
+		<Box
+			p={3}
 			bg="bg.50"
-			borderRadius="lg"
+			borderBottomLeftRadius="lg"
 			borderLeftWidth={{ base: 0, md: "1px" }}
 			borderLeftColor="bg.100"
-			order={{ base: 1, md: 2 }}
+			width="100%"
+			height="100%"
+			overflow="visible"
 			boxShadow="sm"
 			position="relative"
 			transition="all 0.4s ease"
@@ -26,24 +28,31 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 			borderTopWidth={{ base: "1px", md: 0 }}
 			borderTopColor="bg.100"
 		>
-			<VStack align="flex-start" gap={4} width="100%">
-				<SimpleGrid columns={{ base: 1, md: open ? 1 : 2 }} gap={4} width="100%">
+			<VStack align="flex-start" gap={2} width="100%">
+				<SimpleGrid columns={{ base: 1, md: 1 }} gap={2} width="100%">
 					{placeDetails.internationalPhoneNumber && (
-						<HStack>
-							<Icon as={FiPhone} color="accent.lavender" />
-							<Text color="fg.DEFAULT">{placeDetails.internationalPhoneNumber}</Text>
+						<HStack gap={2}>
+							<Icon as={FiPhone} color="accent.lavender" boxSize="0.9rem" />
+							<Text fontSize="sm" color="fg.DEFAULT">
+								{placeDetails.internationalPhoneNumber}
+							</Text>
 						</HStack>
 					)}
 
 					{placeDetails.websiteUri && (
-						<HStack>
-							<Icon as={FiGlobe} color="accent.lavender" />
+						<HStack gap={2} overflow="hidden">
+							<Icon as={FiGlobe} color="accent.lavender" boxSize="0.9rem" minWidth="0.9rem" />
 							<Link
 								href={placeDetails.websiteUri}
 								color="accent.matcha.dark"
 								target="_blank"
 								onClick={(e) => e.stopPropagation()}
 								fontWeight="500"
+								fontSize="sm"
+								maxWidth="100%"
+								overflow="hidden"
+								textOverflow="ellipsis"
+								whiteSpace="nowrap"
 							>
 								{placeDetails.websiteUri}
 							</Link>
@@ -51,14 +60,18 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 					)}
 				</SimpleGrid>
 
+				<Box w="100%" h="1px" bg="gray.100" my={1} />
+
 				<PriceAndStatus
 					priceRange={placeDetails.priceRange}
 					priceLevel={placeDetails.priceLevel}
 					isOpenNow={placeDetails.regularOpeningHours?.openNow}
 				/>
 
+				<Box w="100%" h="1px" bg="gray.100" my={1} />
+
 				{placeDetails.types && placeDetails.types.length > 0 && <Categories types={placeDetails.types} />}
 			</VStack>
-		</GridItem>
+		</Box>
 	);
 }

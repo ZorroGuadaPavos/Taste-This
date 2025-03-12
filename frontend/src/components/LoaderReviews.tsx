@@ -18,7 +18,7 @@ const appear = keyframes`
   100% { opacity: 1; transform: scale(1); }
 `;
 
-export function LoadingIndicator() {
+export function LoaderReviews() {
 	return (
 		<Center w="100%" maxW="2xl">
 			<Flex
@@ -34,7 +34,6 @@ export function LoadingIndicator() {
 				boxShadow="0 4px 8px rgba(0,0,0,0.05)"
 			>
 				<Flex gap={4} mb={5} position="relative">
-					{/* Animated food icons */}
 					<Box
 						as={GiBowlOfRice}
 						fontSize="2rem"
