@@ -1,8 +1,28 @@
 import type { PlaceDetails } from "@/services/googleMapsService";
 import { Box, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import type React from "react";
 import { FiGlobe, FiPhone } from "react-icons/fi";
 import { Categories } from "./Categories";
 import { PriceAndStatus } from "./PriceAndStatus";
+
+interface ContactInfoProps {
+	icon: React.ElementType;
+	color?: string;
+	children: React.ReactNode;
+}
+
+function ContactInfo({ icon, color = "accent.lavender", children }: ContactInfoProps) {
+	return (
+		<HStack gap={2} overflow="hidden">
+			<Icon as={icon} color={color} boxSize="0.9rem" minWidth="0.9rem" />
+			{children}
+		</HStack>
+	);
+}
+
+function Divider() {
+	return <Box w="100%" h="1px" bg="gray.100" my={1} />;
+}
 
 interface PlaceDetailsContentProps {
 	placeDetails: PlaceDetails;
@@ -31,17 +51,15 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 			<VStack align="flex-start" gap={2} width="100%">
 				<SimpleGrid columns={{ base: 1, md: 1 }} gap={2} width="100%">
 					{placeDetails.internationalPhoneNumber && (
-						<HStack gap={2}>
-							<Icon as={FiPhone} color="accent.lavender" boxSize="0.9rem" />
+						<ContactInfo icon={FiPhone}>
 							<Text fontSize="sm" color="fg.DEFAULT">
 								{placeDetails.internationalPhoneNumber}
 							</Text>
-						</HStack>
+						</ContactInfo>
 					)}
 
 					{placeDetails.websiteUri && (
-						<HStack gap={2} overflow="hidden">
-							<Icon as={FiGlobe} color="accent.lavender" boxSize="0.9rem" minWidth="0.9rem" />
+						<ContactInfo icon={FiGlobe}>
 							<Link
 								href={placeDetails.websiteUri}
 								color="accent.matcha.dark"
@@ -54,13 +72,13 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 								textOverflow="ellipsis"
 								whiteSpace="nowrap"
 							>
-								{placeDetails.websiteUri}
+								Website
 							</Link>
-						</HStack>
+						</ContactInfo>
 					)}
 				</SimpleGrid>
 
-				<Box w="100%" h="1px" bg="gray.100" my={1} />
+				<Divider />
 
 				<PriceAndStatus
 					priceRange={placeDetails.priceRange}
@@ -68,7 +86,7 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 					isOpenNow={placeDetails.regularOpeningHours?.openNow}
 				/>
 
-				<Box w="100%" h="1px" bg="gray.100" my={1} />
+				<Divider />
 
 				{placeDetails.types && placeDetails.types.length > 0 && <Categories types={placeDetails.types} />}
 			</VStack>
