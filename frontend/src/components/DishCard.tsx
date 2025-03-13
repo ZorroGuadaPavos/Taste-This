@@ -14,13 +14,6 @@ interface DishCardProps {
 }
 
 export function DishCard({ dish }: DishCardProps) {
-	const getMentionLevel = (mentions: number) => {
-		if (!mentions || mentions <= 0) return 0;
-		return Math.min(10, Math.max(1, Math.ceil(Math.log10(mentions) * 5)));
-	};
-
-	const mentionLevel = getMentionLevel(dish.mentions || 0);
-
 	return (
 		<Box
 			p={5}
@@ -32,18 +25,18 @@ export function DishCard({ dish }: DishCardProps) {
 			position="relative"
 			overflow="hidden"
 		>
-			{mentionLevel >= 6 && (
+			{dish.mentions >= 6 && (
 				<Box
 					position="absolute"
 					top={0}
-					right={0}
 					bg="accent.sakura"
 					color="white"
+					right="20%"
 					px={2}
 					py={1}
 					fontSize="xs"
 					fontWeight="bold"
-					borderBottomLeftRadius="md"
+					borderBottomRadius="md"
 				>
 					Popular
 				</Box>

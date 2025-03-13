@@ -14,7 +14,7 @@ interface PriceAndStatusProps {
 			nanos?: number;
 		};
 	};
-	priceLevel?: number;
+	priceLevel?: string | number;
 	isOpenNow?: boolean;
 }
 
@@ -32,7 +32,7 @@ export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndSt
 		);
 	};
 
-	const formatPriceRange = (range?: PriceAndStatusProps["priceRange"], level?: number) => {
+	const formatPriceRange = (range?: PriceAndStatusProps["priceRange"], level?: string) => {
 		if (range?.startPrice) {
 			const getCurrencySymbol = (currencyCode?: string) => {
 				switch (currencyCode) {
@@ -66,7 +66,13 @@ export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndSt
 		}
 
 		if (level !== undefined) {
-			return Array(level).fill("$").join("");
+			if (typeof level === "string") {
+				if (level === "PRICE_LEVEL_UNSPECIFIED") {
+					return "Unknown";
+				}
+				const pricePart = level.replace("PRICE_LEVEL_", "");
+				return pricePart.charAt(0).toUpperCase() + pricePart.slice(1).toLowerCase();
+			}
 		}
 
 		return "Not available";

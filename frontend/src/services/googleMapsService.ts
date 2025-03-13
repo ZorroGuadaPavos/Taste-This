@@ -41,7 +41,7 @@ export interface PlaceDetails {
 	websiteUri?: string;
 	internationalPhoneNumber?: string;
 	rating?: number;
-	priceLevel?: number;
+	priceLevel?: string;
 	priceRange?: {
 		startPrice?: {
 			currencyCode?: string;

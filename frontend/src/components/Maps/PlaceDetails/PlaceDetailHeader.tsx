@@ -34,7 +34,7 @@ export function PlaceDetailHeader({ placeDetails, open, onToggle }: PlaceDetailH
 					right="2"
 					zIndex="1"
 				>
-					<Icon as={FiStar} color="accent.matcha.dark" />
+					<Icon as={FiStar} fill="accent.matcha.dark" />
 					<Text fontWeight="bold">{placeDetails.rating.toFixed(1)}</Text>
 				</HStack>
 			)}
@@ -57,8 +57,8 @@ export function PlaceDetailHeader({ placeDetails, open, onToggle }: PlaceDetailH
 
 			<Flex position="absolute" bottom="-1px" left="50%" right="0" justifyContent="center" pointerEvents="none">
 				<Box
-					bg={open ? "accent.matcha.light" : "accent.lavender.light"}
-					color={open ? "accent.matcha.dark" : "accent.lavender"}
+					bg={open ? "accent.pink.dark" : "accent.lavender"}
+					color={open ? "white" : "white"}
 					px={3}
 					py={1}
 					borderTopLeftRadius="md"
@@ -66,7 +66,7 @@ export function PlaceDetailHeader({ placeDetails, open, onToggle }: PlaceDetailH
 					fontSize="xs"
 					fontWeight="medium"
 				>
-					{open ? "Hide details" : "Click to see details"}
+					{open ? "Hide details" : "Show details"}
 				</Box>
 			</Flex>
 		</Box>

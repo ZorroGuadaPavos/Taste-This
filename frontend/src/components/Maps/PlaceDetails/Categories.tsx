@@ -7,11 +7,7 @@ interface CategoriesProps {
 export function Categories({ types }: CategoriesProps) {
 	if (!types || types.length === 0) return null;
 
-	// Filter and limit categories to only show the relevant ones
-	const relevantTypes = types
-		.filter((type) => !type.includes("establishment") && !type.includes("point_of_interest"))
-		.slice(0, 4);
-
+	const relevantTypes = types.slice(0, 4);
 	if (relevantTypes.length === 0) return null;
 
 	return (

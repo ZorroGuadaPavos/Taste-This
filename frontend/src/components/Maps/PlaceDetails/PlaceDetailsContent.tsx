@@ -1,5 +1,5 @@
 import type { PlaceDetails } from "@/services/googleMapsService";
-import { Box, Flex, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { FiGlobe, FiPhone } from "react-icons/fi";
 import { Categories } from "./Categories";
 import { PriceAndStatus } from "./PriceAndStatus";
@@ -15,6 +15,7 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 			p={3}
 			bg="bg.50"
 			borderBottomLeftRadius="lg"
+			borderTopLeftRadius="lg"
 			borderLeftWidth={{ base: 0, md: "1px" }}
 			borderLeftColor="bg.100"
 			width="100%"
@@ -25,7 +26,6 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 			transition="all 0.4s ease"
 			opacity={open ? 1 : 0}
 			transform={open ? "translateY(0)" : "translateY(-20px)"}
-			borderTopWidth={{ base: "1px", md: 0 }}
 			borderTopColor="bg.100"
 		>
 			<VStack align="flex-start" gap={2} width="100%">
