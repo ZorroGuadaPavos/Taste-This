@@ -1,58 +1,79 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
+// export const textStyles = defineTextStyles({
+// 	body: {
+// 		value: {
+// 			fontFamily: "Quicksand', sans-serif",
+// 		},
+// 	},
+// });
+
 const config = defineConfig({
 	theme: {
+		// textStyles,
 		semanticTokens: {
 			colors: {
 				bg: {
 					DEFAULT: {
-						value: { _light: "#F3F3EE", _dark: "#312a37" },
+						value: { _light: "#FAF5F5", _dark: "#2B2238" },
 					},
 					400: {
-						value: { _light: "#a8a89a", _dark: "#eae9eb" },
+						value: { _light: "#D0CDCD", _dark: "#E0DBE6" },
 					},
 					300: {
-						value: { _light: "#bdbdad", _dark: "#c1bfc3" },
+						value: { _light: "#E2DFE0", _dark: "#B8B0BF" },
 					},
 					200: {
-						value: { _light: "#d3d3c1", _dark: "#78727c" },
+						value: { _light: "#EDE9EA", _dark: "#665B71" },
 					},
 					100: {
-						value: { _light: "#deded0", _dark: "#2F363D" },
+						value: { _light: "#F4F1F2", _dark: "#332A3D" },
 					},
 					50: {
-						value: { _light: "#e8e8df", _dark: "#453f4b" },
+						value: { _light: "#F9F7F8", _dark: "#3E3548" },
 					},
 					input: {
-						value: { _light: "{colors.gray.400}", _dark: "#2c2531" },
+						value: { _light: "#FFFFFF", _dark: "#271E32" },
 					},
 					box: {
-						value: { _light: "#24292E", _dark: "#24292E" },
+						value: { _light: "#FFFFFF", _dark: "#241B2F" },
 					},
 					code: {
-						value: { _light: "#191919", _dark: "#202429" },
+						value: { _light: "#F7F0F3", _dark: "#231B29" },
 					},
 				},
 				fg: {
 					DEFAULT: {
-						value: { _light: "#726051", _dark: "{colors.gray.200}" },
+						value: { _light: "#5D4B57", _dark: "#E6DFE3" },
 					},
 					muted: {
-						value: { _light: "#a8a89a", _dark: "{colors.gray.400}" },
+						value: { _light: "#9B8E97", _dark: "#A29AA0" },
 					},
 				},
 				accent: {
-					blue: {
-						value: "#20B8CD",
+					pink: {
+						value: "#F7B1D0",
 					},
-					"blue.dark": {
-						value: "#204044",
+					"pink.dark": {
+						value: "#D985B0",
 					},
-					"red.dark": {
-						value: "#57303A",
+					sakura: {
+						value: "#FFB7C5",
 					},
-					"green.dark": {
-						value: "#2E493F",
+					matcha: {
+						value: "#89B893",
+					},
+					"matcha.dark": {
+						value: "#5D7F64",
+					},
+					"matcha.light": {
+						value: "#DDF0E0",
+					},
+					lavender: {
+						value: "#C8A2D4",
+					},
+					"lavender.light": {
+						value: "#E8D7ED",
 					},
 				},
 			},

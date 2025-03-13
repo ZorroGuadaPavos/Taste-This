@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, Icon, Text, VStack } from "@chakra-ui/react";
-import { FaExclamationTriangle, FaSearch } from "react-icons/fa";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { MdSearchOff } from "react-icons/md";
 
 interface ErrorMessageProps {
 	message: string;
@@ -16,28 +17,29 @@ export function ErrorMessage({ message, type = "error" }: ErrorMessageProps) {
 			w="100%"
 			maxW="2xl"
 			mt={6}
-			p={5}
-			borderRadius="md"
-			bg={isNotFound ? "orange.50" : "red.50"}
+			p={6}
+			borderRadius="xl"
+			bg={isNotFound ? "bg.50" : "bg.50"}
 			borderWidth="1px"
-			borderColor={isNotFound ? "orange.200" : "red.200"}
-			transition="all 0.3s ease"
+			borderColor={isNotFound ? "accent.matcha.light" : "accent.pink.dark"}
+			borderLeftWidth="4px"
+			boxShadow="sm"
 		>
-			<Flex align="center" mb={3}>
+			<Flex align="center" mb={4}>
 				<Icon
-					as={isNotFound ? FaSearch : FaExclamationTriangle}
-					color={isNotFound ? "orange.500" : "red.500"}
-					boxSize={5}
-					mr={2}
+					as={isNotFound ? MdSearchOff : HiOutlineExclamationCircle}
+					color={isNotFound ? "accent.matcha.dark" : "accent.sakura"}
+					boxSize={6}
+					mr={3}
 				/>
-				<Heading as="h3" size="md" color={isNotFound ? "orange.600" : "red.600"}>
+				<Heading as="h3" size="md" color={isNotFound ? "accent.matcha.dark" : "accent.pink.dark"} fontWeight="600">
 					{isNotFound ? "Restaurant Not Found" : "Oops! Something went wrong"}
 				</Heading>
 			</Flex>
-			<VStack align="start" gap={2}>
+			<VStack align="start" gap={2} pl={9}>
 				{messageLines.map((line) =>
 					line ? (
-						<Text key={`error-line-${line.substring(0, 10)}`} color="gray.700">
+						<Text key={`error-line-${line.substring(0, 10)}`} color="fg.muted" fontSize="sm">
 							{line}
 						</Text>
 					) : (

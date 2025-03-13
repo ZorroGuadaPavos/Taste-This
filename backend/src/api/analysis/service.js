@@ -41,7 +41,6 @@ export async function analyzePopularDishes(reviews, geminiModel) {
 			return result;
 		} catch (error) {
 			console.error("Error parsing AI response:", error);
-			console.log("Raw response:", responseText);
 			return { popularDishes: [] };
 		}
 	} catch (error) {
