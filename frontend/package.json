@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc -p tsconfig.build.json && vite build",
+		"build": "tsc -p tsconfig.build.json && vite build --mode production",
 		"debug": "vite --debug",
 		"preview": "vite preview",
 		"generate-client": "openapi-ts",
