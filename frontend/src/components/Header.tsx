@@ -1,13 +1,13 @@
-import { GiCupcake } from "react-icons/gi";
+import Logo from "/logo_stars.svg";
 
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Text } from "@chakra-ui/react";
 
 export function Header() {
 	return (
 		<Box mb={8} textAlign="center">
 			<Heading as="h1" size="2xl" fontWeight="700" color="accent.matcha.dark" mb={3}>
 				<Flex align="center" justify="center">
-					<Box as={GiCupcake} color="accent.sakura" fontSize="1.2em" mr={2} transform="rotate(-10deg)" />
+					<Image src={Logo} alt="Logo" width="2em" mr={2} transform="rotate(-10deg)" />
 					TasteThis!
 				</Flex>
 			</Heading>

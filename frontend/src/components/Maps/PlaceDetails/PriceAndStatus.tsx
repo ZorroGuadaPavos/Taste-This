@@ -14,7 +14,7 @@ interface PriceAndStatusProps {
 			nanos?: number;
 		};
 	};
-	priceLevel?: string | number;
+	priceLevel?: string;
 	isOpenNow?: boolean;
 }
 
