@@ -1,4 +1,5 @@
-import { Box, Flex, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
 import { ImGithub } from "react-icons/im";
 
 export function Footer() {
@@ -10,24 +11,22 @@ export function Footer() {
 					<Box as="span" mx={2} fontSize="xs">
 						•
 					</Box>
-					<Link color="accent.sakura" href="/about" _focus={{ outline: "none" }}>
+					<Link color="accent.sakura" to="/about">
 						About
 					</Link>
 					<Box as="span" mx={2} fontSize="xs">
 						•
 					</Box>
-					<Link
+					<a
 						color="accent.sakura"
 						href="https://github.com/ZorroGuadaPavos/Taste-This"
 						target="_blank"
 						rel="noopener noreferrer"
-						_focus={{ outline: "none" }}
-						display="inline-flex"
-						alignItems="center"
+						style={{ display: "flex", alignItems: "center" }}
 					>
 						<ImGithub style={{ marginRight: "4px" }} />
 						GitHub
-					</Link>
+					</a>
 				</Text>
 			</Flex>
 		</Box>

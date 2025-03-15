@@ -1,5 +1,5 @@
-import { Box, Container, Flex, Heading, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { Box, Link as ChakraLink, Container, Flex, Heading, Icon, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { FaArrowLeft, FaCamera, FaCommentAlt, FaUtensils } from "react-icons/fa";
 import { Footer } from "../components/Footer";
 
@@ -12,14 +12,14 @@ function AboutPage() {
 		<Container maxW="container.lg" py={10} display="flex" minH="100dvh" flexDirection="column">
 			<VStack gap={8} align="start" flex="1" px={8}>
 				<Link
-					href="/"
-					display="flex"
-					alignItems="center"
-					mb={8}
-					fontWeight="medium"
-					color="accent.sakura"
-					_hover={{ textDecoration: "none", color: "accent.sakura.dark" }}
-					_focus={{ outline: "none" }}
+					to="/"
+					style={{
+						display: "flex",
+						alignItems: "center",
+						marginBottom: "2rem",
+						fontWeight: "500",
+						color: "var(--chakra-colors-accent-sakura)",
+					}}
 				>
 					<Icon as={FaArrowLeft} mr={2} />
 					Back to home
@@ -105,7 +105,7 @@ function AboutPage() {
 					</Heading>
 
 					<Box pl={2} borderLeft="3px solid" borderColor="accent.sakura" mb={2}>
-						<Link
+						<ChakraLink
 							href="https://flash-notes.com"
 							target="_blank"
 							rel="noopener noreferrer"
@@ -114,7 +114,7 @@ function AboutPage() {
 							_hover={{ textDecoration: "none", color: "accent.sakura.dark" }}
 						>
 							Flash Notes
-						</Link>
+						</ChakraLink>
 						<Text color="fg.muted" mt={1}>
 							A modern flashcard tool for studying
 						</Text>
