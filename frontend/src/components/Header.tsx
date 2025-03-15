@@ -23,7 +23,7 @@ export function Header() {
 				py={1}
 				bg="bg.50"
 			>
-				Discover the best dishes at any restaurant based on real customer reviews
+				Discover popular dishes at restaurants based on real customer reviews
 			</Text>
 		</Box>
 	);

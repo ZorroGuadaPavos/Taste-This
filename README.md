@@ -1,5 +1,9 @@
 # Taste This
 
+No more wondering what to order!
+
+https://taste-this.com find the most popular dishes at restaurants. By analyzing customer reviews, we identify the most recommended dishes, their ratings, and what people are saying about them. 
+
 #### Your guide to the most recommended dishes.
 
 ## Technology Stack and Features
@@ -16,7 +20,6 @@
         - [TanStack Query](https://tanstack.com/query) for data fetching.
         - Generated client for consuming the backend API.
 - **AI Integration:**
-    - [LangChain](https://js.langchain.com) for AI capabilities.
     - [Google Generative AI](https://ai.google.dev) integration.
 
 ## Preview
@@ -72,31 +75,26 @@ The backend server will be available at the configured port.
 
 ### Frontend Setup
 
-1. Install dependencies and start the development server:
+1. Navigate to the backend directory:
 ```bash
 cd frontend
+```
+
+2. Install dependencies:
+```bash
 pnpm install
+```
+
+3. Set up environment variables:
+   - Copy `.env.example` to `.env.local`
+   - Update the variables as needed
+
+4. Start the development server:
+```bash
 pnpm run dev
 ```
 
-2. The frontend development server will be available at `http://localhost:5173` (or another port if 5173 is in use).
-
-### Generate Frontend API Client
-
-The frontend uses a generated TypeScript client to communicate with the backend API. To update the client after making changes to the backend:
-
-1. Download the OpenAPI specification from the backend:
-   - Make sure your backend server is running
-   - Download the openapi.json file from http://localhost:3000/docs and place it in the frontend root directory
-
-2. Generate the client:
-```bash
-cd frontend
-pnpm run generate-client
-```
-
-## API Documentation
-Once the backend is running, access the interactive API documentation at the Swagger UI endpoint.
+5. The application will be available at `http://localhost:5173`
 
 ## Contributing
 1. Fork the repository
@@ -105,5 +103,3 @@ Once the backend is running, access the interactive API documentation at the Swa
 4. Push to your branch
 5. Create a Pull Request
 
-## License
-This project is licensed under the MIT License.

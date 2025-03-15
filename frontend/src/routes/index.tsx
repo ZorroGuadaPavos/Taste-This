@@ -1,5 +1,6 @@
 import type { GetAnalysisResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
+import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LoaderReviews } from "@/components/LoaderReviews";
 import { PlaceDetailsCard } from "@/components/Maps/PlaceDetails";
@@ -80,9 +81,9 @@ function LandingPage() {
 	};
 
 	return (
-		<Container maxW="container.xl" py={10}>
+		<Container maxW="container.xl" py={10} minH="100dvh" display="flex" flexDirection="column">
 			<APILoader apiKey={GoogleMapsConfig.apiKey} solutionChannel={GoogleMapsConfig.solutionChannel} />
-			<VStack gap={5} align="center">
+			<VStack gap={5} align="center" flex="1">
 				<Header />
 				<Search
 					restaurant={restaurant}
@@ -97,6 +98,8 @@ function LandingPage() {
 				{errorMessage && <ErrorMessage message={errorMessage} type={errorType} />}
 				{renderRecommendations()}
 			</VStack>
+
+			<Footer />
 		</Container>
 	);
 }

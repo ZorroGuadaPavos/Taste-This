@@ -17,11 +17,11 @@ function RecommendationsListComponent({ recommendations, place }: Recommendation
 
 	const filteredAndSortedDishes = recommendations.popularDishes
 		? [...recommendations.popularDishes].sort((a, b) => {
-				if (b.rating !== a.rating) {
-					return b.rating - a.rating;
-				}
 				if (b.mentions !== a.mentions) {
 					return b.mentions - a.mentions;
+				}
+				if (b.rating !== a.rating) {
+					return b.rating - a.rating;
 				}
 				return b.sentimentScore - a.sentimentScore;
 			})

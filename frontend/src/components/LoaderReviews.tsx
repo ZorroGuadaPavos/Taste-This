@@ -45,7 +45,7 @@ export function LoaderReviews() {
 						as={GiChopsticks}
 						fontSize="2rem"
 						color="accent.pink"
-						animation={`${rotate} 2s linear infinite`}
+						animation={`${bounce} 2s linear infinite`}
 						animationDelay="0.2s"
 						transformOrigin="center 70%"
 					/>
