@@ -2,15 +2,9 @@ import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { GiBowlOfRice, GiChopsticks, GiCupcake, GiSushis } from "react-icons/gi";
 
-// Create animation keyframes
 const bounce = keyframes`
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
-`;
-
-const rotate = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 `;
 
 const appear = keyframes`
