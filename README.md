@@ -103,3 +103,6 @@ pnpm run dev
 4. Push to your branch
 5. Create a Pull Request
 
+## Acknowledgements
+- [YasogaN/google-maps-review-scrape](https://github.com/YasogaN/google-maps-review-scrape) - Used as scraper implementation in this project.
+
