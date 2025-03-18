@@ -1,12 +1,20 @@
 import { getPopularDishesModelConfig } from "../../ai-providers/gemini/config.js";
 import { scraper } from "../../scraper/index.js";
 import { searchPlaceById } from "../../scraper/searchPlaceById.js";
-// import { saveResponseData } from "../../utils/saveResponse.js";
+import { saveResponseData } from "../../utils/saveResponse.js";
+
+export async function fetchPlaceUrl(query) {
+	const placeData = await searchPlaceById(query);
+	return {
+		query,
+		...placeData,
+	};
+}
 
 export async function fetchRestaurantReviews(query) {
-	const placeUrl = await searchPlaceById(query);
-	const reviews = await scraper(placeUrl, { sort_type: "relevant", pages: "3", clean: true });
-	// saveResponseData({ query, placeUrl, reviewsLength: reviews.length, reviews }, "reviews");
+	const { placeUrl } = await fetchPlaceUrl(query);
+	const reviews = await scraper(placeUrl, { sort_type: "relevant", pages: "3", clean: false });
+	saveResponseData({ query, placeUrl, reviewsLength: reviews.length, reviews }, "reviews");
 
 	if (reviews === 0 || reviews.length === 0) {
 		return {

@@ -142,8 +142,8 @@ function transformPlaceDetails(rawPlace: any): PlaceDetails {
 		priceRange: rawPlace.priceRange || undefined,
 		businessStatus: rawPlace.businessStatus,
 		types: rawPlace.types || [],
-		regularOpeningHours: rawPlace.regularOpeningHours || {},
-		photos: rawPlace.photos || [],
+		regularOpeningHours: {},
+		photos: [],
 	};
 }
 
@@ -158,7 +158,7 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResu
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": GoogleMapsConfig.apiKey,
 				"X-Goog-FieldMask":
-					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,priceRange,businessStatus,types,regularOpeningHours,photos",
+					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,priceRange,businessStatus,types",
 			},
 		});
 

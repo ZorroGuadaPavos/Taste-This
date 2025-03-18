@@ -3,21 +3,43 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { GetAnalysisData, GetAnalysisResponse } from './types.gen';
+import type { GetRestaurantsData, GetRestaurantsResponse, GetRestaurantsDishesData, GetRestaurantsDishesResponse } from './types.gen';
 
-export class AnalysisService {
+export class RestaurantsService {
+    /**
+     * Get place URL from query
+     * Returns the Google Maps URL for a place based on the query
+     * @param data The data for the request.
+     * @param data.query identifier of the restaurant
+     * @returns unknown Place URL found successfully
+     * @throws ApiError
+     */
+    public static getRestaurants(data: GetRestaurantsData): CancelablePromise<GetRestaurantsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/restaurants',
+            query: {
+                query: data.query
+            },
+            errors: {
+                400: 'Bad request or URL not found',
+                500: 'Server error'
+            }
+        });
+    }
+    
     /**
      * Find popular dishes from restaurant reviews
      * Analyzes restaurant reviews to identify the most popular dishes mentioned
      * @param data The data for the request.
-     * @param data.query The name of the restaurant to analyze
+     * @param data.query identifier of the restaurant
      * @returns unknown Popular dishes analysis completed successfully
      * @throws ApiError
      */
-    public static getAnalysis(data: GetAnalysisData): CancelablePromise<GetAnalysisResponse> {
+    public static getRestaurantsDishes(data: GetRestaurantsDishesData): CancelablePromise<GetRestaurantsDishesResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/analysis',
+            url: '/restaurants/dishes',
             query: {
                 query: data.query
             },

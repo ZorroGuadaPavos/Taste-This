@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const PopularDishesRequestSchema = z.object({
+const RestaurantUrlRequestSchema = z.object({
 	query: z.string().describe("identifier of the restaurant"),
 });
 
@@ -12,17 +12,27 @@ const DishSchema = z.object({
 	reviewExcerpts: z.array(z.string()).describe("Excerpts from reviews mentioning this dish"),
 });
 
-const PopularDishesResponseSchema = z.object({
+const RestaurantDishesResponseSchema = z.object({
 	success: z.boolean(),
-	query: z.string(),
 	totalReviewsAnalyzed: z.number(),
 	popularDishes: z.array(DishSchema),
 });
 
-const AnalysisErrorResponseSchema = z.object({
+const RestaurantUrlResponseSchema = z.object({
 	success: z.boolean(),
-	query: z.string(),
+	placeUrl: z.string(),
+	imageUrl: z.string().nullable(),
+});
+
+const RestaurantErrorResponseSchema = z.object({
+	success: z.boolean(),
 	error: z.string(),
 });
 
-export { PopularDishesRequestSchema, PopularDishesResponseSchema, DishSchema, AnalysisErrorResponseSchema };
+export {
+	RestaurantUrlRequestSchema,
+	RestaurantDishesResponseSchema,
+	RestaurantUrlResponseSchema,
+	RestaurantErrorResponseSchema,
+	DishSchema,
+};

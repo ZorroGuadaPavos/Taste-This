@@ -1,4 +1,4 @@
-import type { GetAnalysisResponse } from "@/client";
+import type { GetRestaurantsDishesResponse, GetRestaurantsResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -8,7 +8,7 @@ import { RecommendationsList } from "@/components/RecommendationsList";
 import { Search } from "@/components/Search";
 import { GoogleMapsConfig } from "@/config/maps";
 import { type TextSearchResponse, searchPlacesByText } from "@/services/googleMapsService";
-import { searchRestaurant } from "@/services/restaurantService";
+import { getRestaurantDishes, getRestaurantInfo, searchRestaurant } from "@/services/restaurantService";
 import type { Place } from "@/types/Place";
 import { Container, VStack } from "@chakra-ui/react";
 import { APILoader } from "@googlemaps/extended-component-library/react";
@@ -22,7 +22,8 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
 	const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [recommendations, setRecommendations] = useState<GetAnalysisResponse | null>(null);
+	const [recommendations, setRecommendations] = useState<GetRestaurantsDishesResponse | null>(null);
+	const [restaurantInfo, setRestaurantInfo] = useState<GetRestaurantsResponse | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [errorType, setErrorType] = useState<"notFound" | "error">("error");
 	const [restaurant, setRestaurant] = useState("");
@@ -51,15 +52,33 @@ function LandingPage() {
 
 		setIsLoading(true);
 		setErrorMessage(null);
-		const result = await searchRestaurant(searchQuery);
 
-		if (result.data) {
-			setRecommendations(result.data);
-		} else if (result.error) {
-			setErrorType(result.error.type);
-			setErrorMessage(result.error.message);
+		// Step 1: Get restaurant info
+		const restaurantResult = await getRestaurantInfo(searchQuery);
+
+		if (restaurantResult.error) {
+			setErrorType(restaurantResult.error.type);
+			setErrorMessage(restaurantResult.error.message);
 			setRecommendations(null);
+			setIsLoading(false);
+			return;
 		}
+
+		if (restaurantResult.data) {
+			setRestaurantInfo(restaurantResult.data);
+
+			// Step 2: Get restaurant dishes using placeUrl
+			const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrl);
+
+			if (dishesResult.data) {
+				setRecommendations(dishesResult.data);
+			} else if (dishesResult.error) {
+				setErrorType(dishesResult.error.type);
+				setErrorMessage(dishesResult.error.message);
+				setRecommendations(null);
+			}
+		}
+
 		setIsLoading(false);
 	}, []);
 
