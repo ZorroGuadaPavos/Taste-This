@@ -1,16 +1,14 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import DummyPhoto from "/dummy_800x400.png";
-import type { Photo } from "./types";
 
 interface MainPlacePhotoProps {
-	photo: Photo;
 	placeName: string;
 	height?: string | object;
 	onClick?: () => void;
 }
 
-export function MainPlacePhoto({ photo, placeName, height = "100%", onClick }: MainPlacePhotoProps) {
+export function MainPlacePhoto({ placeName, height = "100%", onClick }: MainPlacePhotoProps) {
 	const [hasError, setHasError] = useState(false);
 
 	const handleImageError = () => {

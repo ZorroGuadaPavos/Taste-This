@@ -45,10 +45,9 @@ const NoPhotosAvailable = ({ height }: { height: string | object }) => (
 
 interface ExpandedContentProps {
 	placeDetails: PlaceDetails;
-	selectedPhotoIndex: number;
 }
 
-const ExpandedContent = ({ placeDetails, selectedPhotoIndex }: ExpandedContentProps) => {
+const ExpandedContent = ({ placeDetails }: ExpandedContentProps) => {
 	if (!placeDetails.photos || placeDetails.photos.length === 0) {
 		return (
 			<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
@@ -71,7 +70,7 @@ const ExpandedContent = ({ placeDetails, selectedPhotoIndex }: ExpandedContentPr
 	return (
 		<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
 			<Flex flex={{ base: "none", md: 1 }} p={3} align="center" justify="center" height={{ base: "12rem", md: "100%" }}>
-				<MainPlacePhoto photo={placeDetails.photos[selectedPhotoIndex]} placeName={placeDetails.displayName} />
+				<MainPlacePhoto placeName={placeDetails.displayName} />
 			</Flex>
 
 			<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
@@ -100,7 +99,7 @@ const CollapsedContent = ({ placeDetails, selectedPhotoIndex, onPhotoSelect }: C
 		<Box p={3} height="100%">
 			<Flex direction="column" gap={2} height="100%">
 				<Box flex="1" minHeight="0">
-					<MainPlacePhoto photo={placeDetails.photos[selectedPhotoIndex]} placeName={placeDetails.displayName} />
+					<MainPlacePhoto placeName={placeDetails.displayName} />
 				</Box>
 				<Box height="4rem">
 					<PhotoThumbnails
@@ -142,7 +141,7 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 
 			<Box ref={detailsRef} height={{ base: "auto", md: "20rem" }} overflow="hidden" position="relative">
 				{open ? (
-					<ExpandedContent placeDetails={placeDetails} selectedPhotoIndex={selectedPhotoIndex} />
+					<ExpandedContent placeDetails={placeDetails} />
 				) : (
 					<CollapsedContent
 						placeDetails={placeDetails}
