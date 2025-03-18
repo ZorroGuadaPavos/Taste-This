@@ -1,6 +1,7 @@
-import { GoogleMapsConfig } from "@/config/maps";
+// import { GoogleMapsConfig } from "@/config/maps";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import DummyPhoto from "/dummy_100x100.png";
 import type { Photo } from "./types";
 
 interface PhotoThumbnailsProps {
@@ -60,7 +61,7 @@ export function PhotoThumbnails({
 					title={`View photo ${index + 1}`}
 				>
 					<Image
-						src={`https://places.googleapis.com/v1/${photo.name}/media?key=${GoogleMapsConfig.apiKey}&maxHeightPx=100&maxWidthPx=100`}
+						src={DummyPhoto}
 						alt={`${placeName} - photo ${index + 1}`}
 						objectFit="cover"
 						width="100%"

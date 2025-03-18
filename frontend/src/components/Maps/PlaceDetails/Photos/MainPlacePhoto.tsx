@@ -1,6 +1,6 @@
-import { GoogleMapsConfig } from "@/config/maps";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import DummyPhoto from "/dummy_800x400.png";
 import type { Photo } from "./types";
 
 interface MainPlacePhotoProps {
@@ -28,7 +28,7 @@ export function MainPlacePhoto({ photo, placeName, height = "100%", onClick }: M
 	return (
 		<Box position="relative" width="100%" height={height} borderRadius="md" overflow="hidden">
 			<Image
-				src={`https://places.googleapis.com/v1/${photo.name}/media?key=${GoogleMapsConfig.apiKey}&maxHeightPx=400&maxWidthPx=800`}
+				src={DummyPhoto}
 				alt={`${placeName} photo`}
 				objectFit="cover"
 				width="100%"
