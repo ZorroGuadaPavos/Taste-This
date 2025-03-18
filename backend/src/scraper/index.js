@@ -1,6 +1,6 @@
-import { SortEnum } from "./types.js";
-import { validateParams, fetchReviews, paginateReviews } from "./utils.js";
 import parseReviews from "./parser.js";
+import { SortEnum } from "./types.js";
+import { fetchReviews, paginateReviews, validateParams } from "./utils.js";
 
 /**
  * Scrapes reviews from a given Google Maps URL.
@@ -15,20 +15,16 @@ import parseReviews from "./parser.js";
  * @throws {Error} - Throws an error if the URL is not provided or if fetching reviews fails.
  */
 export async function scraper(url, { sort_type = "relevant", search_query = "", pages = "max", clean = false } = {}) {
-    try {
-        validateParams(url, sort_type, pages, clean);
+	validateParams(url, sort_type, pages, clean);
 
-        const sort = SortEnum[sort_type];
-        const initialData = await fetchReviews(url, sort, "", search_query);
+	const sort = SortEnum[sort_type];
+	const initialData = await fetchReviews(url, sort, "", search_query);
 
-        if (!initialData || !initialData[2] || !initialData[2].length) return 0;
+	if (!initialData || !initialData[2] || !initialData[2].length) return 0;
 
-        if (!initialData[1] || pages === 1) {
-            return clean ? await parseReviews(initialData[2]) : initialData[2];
-        }
+	if (!initialData[1] || pages === 1) {
+		return clean ? await parseReviews(initialData[2]) : initialData[2];
+	}
 
-        return await paginateReviews(url, sort, pages, search_query, clean, initialData);
-    } catch (e) {
-        throw e;
-    }
+	return await paginateReviews(url, sort, pages, search_query, clean, initialData);
 }

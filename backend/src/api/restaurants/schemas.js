@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const RestaurantUrlRequestSchema = z.object({
+const RestaurantIdRequestSchema = z.object({
 	query: z.string().describe("identifier of the restaurant"),
 });
 
@@ -18,10 +18,11 @@ const RestaurantDishesResponseSchema = z.object({
 	popularDishes: z.array(DishSchema),
 });
 
-const RestaurantUrlResponseSchema = z.object({
+const RestaurantInfoResponseSchema = z.object({
 	success: z.boolean(),
-	placeUrl: z.string(),
-	imageUrl: z.string().nullable(),
+	placeUrlId: z.string(),
+	mainImage: z.string().nullable(),
+	images: z.array(z.string()).default([]),
 });
 
 const RestaurantErrorResponseSchema = z.object({
@@ -30,9 +31,9 @@ const RestaurantErrorResponseSchema = z.object({
 });
 
 export {
-	RestaurantUrlRequestSchema,
+	RestaurantIdRequestSchema,
 	RestaurantDishesResponseSchema,
-	RestaurantUrlResponseSchema,
+	RestaurantInfoResponseSchema,
 	RestaurantErrorResponseSchema,
 	DishSchema,
 };

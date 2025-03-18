@@ -2,8 +2,8 @@ import { createRoute } from "@hono/zod-openapi";
 import {
 	RestaurantDishesResponseSchema,
 	RestaurantErrorResponseSchema,
-	RestaurantUrlRequestSchema,
-	RestaurantUrlResponseSchema,
+	RestaurantIdRequestSchema,
+	RestaurantInfoResponseSchema,
 } from "./schemas.js";
 
 export const restaurantEndpointDefinition = createRoute({
@@ -13,14 +13,14 @@ export const restaurantEndpointDefinition = createRoute({
 	summary: "Get place URL from query",
 	description: "Returns the Google Maps URL for a place based on the query",
 	request: {
-		query: RestaurantUrlRequestSchema,
+		query: RestaurantIdRequestSchema,
 	},
 	responses: {
 		200: {
 			description: "Place URL found successfully",
 			content: {
 				"application/json": {
-					schema: RestaurantUrlResponseSchema,
+					schema: RestaurantInfoResponseSchema,
 				},
 			},
 		},
@@ -50,7 +50,7 @@ export const restaurantDishesEndpointDefinition = createRoute({
 	summary: "Find popular dishes from restaurant reviews",
 	description: "Analyzes restaurant reviews to identify the most popular dishes mentioned",
 	request: {
-		query: RestaurantUrlRequestSchema,
+		query: RestaurantIdRequestSchema,
 	},
 	responses: {
 		200: {

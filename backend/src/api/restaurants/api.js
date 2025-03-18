@@ -5,9 +5,9 @@ import { restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from
 import {
 	RestaurantDishesResponseSchema,
 	RestaurantErrorResponseSchema,
-	RestaurantUrlResponseSchema,
+	RestaurantInfoResponseSchema,
 } from "./schemas.js";
-import { analyzePopularDishes, fetchPlaceUrl, fetchRestaurantReviews } from "./service.js";
+import { analyzePopularDishes, fetchRestaurantInfo, fetchRestaurantReviews } from "./service.js";
 
 const RestaurantRouter = new OpenAPIHono();
 
@@ -22,13 +22,14 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 	const { query } = c.req.valid("query");
 
 	try {
-		const { placeUrl, imageUrl } = await fetchPlaceUrl(query);
+		const restaurantData = await fetchRestaurantInfo(query);
+
 		return c.json(
-			RestaurantUrlResponseSchema.parse({
+			RestaurantInfoResponseSchema.parse({
 				success: true,
-				query,
-				placeUrl,
-				imageUrl,
+				placeUrlId: restaurantData.placeUrlId,
+				mainImage: restaurantData.mainImage,
+				images: restaurantData.images || [],
 			}),
 			200,
 		);
