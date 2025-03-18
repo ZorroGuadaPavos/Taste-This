@@ -61,7 +61,7 @@ export function PhotoThumbnails({
 					title={`View photo ${index + 1}`}
 				>
 					<Image
-						src={DummyPhoto}
+						src={photo.url || DummyPhoto}
 						alt={`${placeName} - photo ${index + 1}`}
 						objectFit="cover"
 						width="100%"

@@ -1,12 +1,10 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { GeminiModel } from "../../ai-providers/gemini/provider.js";
+
 import settings from "../../core/config.js";
+
 import { restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
-import {
-	RestaurantDishesResponseSchema,
-	RestaurantErrorResponseSchema,
-	RestaurantInfoResponseSchema,
-} from "./schemas.js";
+import { DishesResponseSchema, ErrorResponseSchema, RestaurantInfoResponseSchema } from "./schemas.js";
 import { analyzePopularDishes, fetchRestaurantInfo, fetchRestaurantReviews } from "./service.js";
 
 const RestaurantRouter = new OpenAPIHono();
@@ -23,7 +21,6 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 
 	try {
 		const restaurantData = await fetchRestaurantInfo(query);
-
 		return c.json(
 			RestaurantInfoResponseSchema.parse({
 				success: true,
@@ -36,7 +33,7 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 	} catch (error) {
 		console.log(error);
 		return c.json(
-			RestaurantErrorResponseSchema.parse({
+			ErrorResponseSchema.parse({
 				success: false,
 				query,
 				error: error.message,
@@ -55,7 +52,7 @@ RestaurantRouter.openapi(restaurantDishesEndpointDefinition, async (c) => {
 		const filteredReviews = reviewsData.reviews.map(({ review_id, review }) => ({ review_id, review }));
 		const analysisResult = await analyzePopularDishes(filteredReviews, geminiModel);
 		return c.json(
-			RestaurantDishesResponseSchema.parse({
+			DishesResponseSchema.parse({
 				success: true,
 				totalReviewsAnalyzed: reviewsData.totalReviewsAnalyzed,
 				popularDishes: analysisResult.popularDishes,
@@ -65,7 +62,7 @@ RestaurantRouter.openapi(restaurantDishesEndpointDefinition, async (c) => {
 	} catch (error) {
 		console.log(error);
 		return c.json(
-			RestaurantErrorResponseSchema.parse({
+			ErrorResponseSchema.parse({
 				success: false,
 				error: error.message,
 			}),

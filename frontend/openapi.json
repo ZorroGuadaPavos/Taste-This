@@ -44,18 +44,22 @@
 										"success": {
 											"type": "boolean"
 										},
-										"query": {
+										"placeUrlId": {
 											"type": "string"
 										},
-										"placeUrl": {
-											"type": "string"
-										},
-										"imageUrl": {
+										"mainImage": {
 											"type": "string",
 											"nullable": true
+										},
+										"images": {
+											"type": "array",
+											"items": {
+												"type": "string"
+											},
+											"default": []
 										}
 									},
-									"required": ["success", "query", "placeUrl", "imageUrl"]
+									"required": ["success", "placeUrlId", "mainImage"]
 								}
 							}
 						}
@@ -70,14 +74,11 @@
 										"success": {
 											"type": "boolean"
 										},
-										"query": {
-											"type": "string"
-										},
 										"error": {
 											"type": "string"
 										}
 									},
-									"required": ["success", "query", "error"]
+									"required": ["success", "error"]
 								}
 							}
 						}
@@ -92,14 +93,11 @@
 										"success": {
 											"type": "boolean"
 										},
-										"query": {
-											"type": "string"
-										},
 										"error": {
 											"type": "string"
 										}
 									},
-									"required": ["success", "query", "error"]
+									"required": ["success", "error"]
 								}
 							}
 						}
@@ -134,9 +132,6 @@
 									"properties": {
 										"success": {
 											"type": "boolean"
-										},
-										"query": {
-											"type": "string"
 										},
 										"totalReviewsAnalyzed": {
 											"type": "number"
@@ -176,7 +171,7 @@
 											}
 										}
 									},
-									"required": ["success", "query", "totalReviewsAnalyzed", "popularDishes"]
+									"required": ["success", "totalReviewsAnalyzed", "popularDishes"]
 								}
 							}
 						}
@@ -191,14 +186,11 @@
 										"success": {
 											"type": "boolean"
 										},
-										"query": {
-											"type": "string"
-										},
 										"error": {
 											"type": "string"
 										}
 									},
-									"required": ["success", "query", "error"]
+									"required": ["success", "error"]
 								}
 							}
 						}
@@ -213,14 +205,11 @@
 										"success": {
 											"type": "boolean"
 										},
-										"query": {
-											"type": "string"
-										},
 										"error": {
 											"type": "string"
 										}
 									},
-									"required": ["success", "query", "error"]
+									"required": ["success", "error"]
 								}
 							}
 						}

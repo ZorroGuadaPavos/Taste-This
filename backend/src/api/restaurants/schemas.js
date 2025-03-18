@@ -12,7 +12,7 @@ const DishSchema = z.object({
 	reviewExcerpts: z.array(z.string()).describe("Excerpts from reviews mentioning this dish"),
 });
 
-const RestaurantDishesResponseSchema = z.object({
+const DishesResponseSchema = z.object({
 	success: z.boolean(),
 	totalReviewsAnalyzed: z.number(),
 	popularDishes: z.array(DishSchema),
@@ -25,15 +25,15 @@ const RestaurantInfoResponseSchema = z.object({
 	images: z.array(z.string()).default([]),
 });
 
-const RestaurantErrorResponseSchema = z.object({
+const ErrorResponseSchema = z.object({
 	success: z.boolean(),
 	error: z.string(),
 });
 
 export {
 	RestaurantIdRequestSchema,
-	RestaurantDishesResponseSchema,
+	DishesResponseSchema,
 	RestaurantInfoResponseSchema,
-	RestaurantErrorResponseSchema,
+	ErrorResponseSchema,
 	DishSchema,
 };

@@ -9,9 +9,9 @@ export type GetRestaurantsData = {
 
 export type GetRestaurantsResponse = ({
     success: boolean;
-    query: string;
-    placeUrl: string;
-    imageUrl: (string) | null;
+    placeUrlId: string;
+    mainImage: (string) | null;
+    images?: Array<(string)>;
 });
 
 export type GetRestaurantsDishesData = {
@@ -23,7 +23,6 @@ export type GetRestaurantsDishesData = {
 
 export type GetRestaurantsDishesResponse = ({
     success: boolean;
-    query: string;
     totalReviewsAnalyzed: number;
     popularDishes: Array<{
         /**

@@ -1,7 +1,7 @@
 import { createRoute } from "@hono/zod-openapi";
 import {
-	RestaurantDishesResponseSchema,
-	RestaurantErrorResponseSchema,
+	DishesResponseSchema,
+	ErrorResponseSchema,
 	RestaurantIdRequestSchema,
 	RestaurantInfoResponseSchema,
 } from "./schemas.js";
@@ -28,7 +28,7 @@ export const restaurantEndpointDefinition = createRoute({
 			description: "Bad request or URL not found",
 			content: {
 				"application/json": {
-					schema: RestaurantErrorResponseSchema,
+					schema: ErrorResponseSchema,
 				},
 			},
 		},
@@ -36,7 +36,7 @@ export const restaurantEndpointDefinition = createRoute({
 			description: "Server error",
 			content: {
 				"application/json": {
-					schema: RestaurantErrorResponseSchema,
+					schema: ErrorResponseSchema,
 				},
 			},
 		},
@@ -57,7 +57,7 @@ export const restaurantDishesEndpointDefinition = createRoute({
 			description: "Popular dishes analysis completed successfully",
 			content: {
 				"application/json": {
-					schema: RestaurantDishesResponseSchema,
+					schema: DishesResponseSchema,
 				},
 			},
 		},
@@ -65,7 +65,7 @@ export const restaurantDishesEndpointDefinition = createRoute({
 			description: "Bad request or analysis error",
 			content: {
 				"application/json": {
-					schema: RestaurantErrorResponseSchema,
+					schema: ErrorResponseSchema,
 				},
 			},
 		},
@@ -73,7 +73,7 @@ export const restaurantDishesEndpointDefinition = createRoute({
 			description: "Server error",
 			content: {
 				"application/json": {
-					schema: RestaurantErrorResponseSchema,
+					schema: ErrorResponseSchema,
 				},
 			},
 		},

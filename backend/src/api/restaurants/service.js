@@ -4,10 +4,6 @@ import { getPlaceUrl, searchPlaceById } from "../../scraper/searchPlaceById.js";
 import { saveResponseData } from "../../utils/saveResponse.js";
 
 export async function fetchRestaurantInfo(query) {
-	if (!query) {
-		throw new Error("Restaurant query is required");
-	}
-
 	const placeData = await searchPlaceById(query);
 
 	if (!placeData || !placeData.placeUrlId) {

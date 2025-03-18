@@ -68,7 +68,7 @@ function LandingPage() {
 			setRestaurantInfo(restaurantResult.data);
 
 			// Step 2: Get restaurant dishes using placeUrl
-			const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrl);
+			const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrlId);
 
 			if (dishesResult.data) {
 				setRecommendations(dishesResult.data);
