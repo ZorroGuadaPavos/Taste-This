@@ -1,5 +1,5 @@
 // import { GoogleMapsConfig } from "@/config/maps";
-import { Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface PhotoThumbnailsProps {
