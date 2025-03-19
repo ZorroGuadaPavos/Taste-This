@@ -8,7 +8,7 @@ import { RecommendationsList } from "@/components/RecommendationsList";
 import { Search } from "@/components/Search";
 import { GoogleMapsConfig } from "@/config/maps";
 import { type TextSearchResponse, searchPlacesByText } from "@/services/googleMapsService";
-import { getRestaurantDishes, getRestaurantInfo, searchRestaurant } from "@/services/restaurantService";
+import { getRestaurantDishes, getRestaurantInfo } from "@/services/restaurantService";
 import type { Place } from "@/types/Place";
 import { Container, VStack } from "@chakra-ui/react";
 import { APILoader } from "@googlemaps/extended-component-library/react";
@@ -23,7 +23,7 @@ function LandingPage() {
 	const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [recommendations, setRecommendations] = useState<GetRestaurantsDishesResponse | null>(null);
-	const [restaurantInfo, setRestaurantInfo] = useState<GetRestaurantsResponse | null>(null);
+	const [restaurantPhotos, setRestaurantPhotos] = useState<GetRestaurantsResponse | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [errorType, setErrorType] = useState<"notFound" | "error">("error");
 	const [restaurant, setRestaurant] = useState("");
@@ -53,7 +53,6 @@ function LandingPage() {
 		setIsLoading(true);
 		setErrorMessage(null);
 
-		// Step 1: Get restaurant info
 		const restaurantResult = await getRestaurantInfo(searchQuery);
 
 		if (restaurantResult.error) {
@@ -65,9 +64,8 @@ function LandingPage() {
 		}
 
 		if (restaurantResult.data) {
-			setRestaurantInfo(restaurantResult.data);
+			setRestaurantPhotos(restaurantResult.data);
 
-			// Step 2: Get restaurant dishes using placeUrl
 			const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrlId);
 
 			if (dishesResult.data) {
@@ -113,7 +111,9 @@ function LandingPage() {
 					onPlaceSelect={handleRestaurantSelect}
 					onClearResults={() => setTextSearchResults(null)}
 				/>
-				{selectedPlace && <PlaceDetailsCard place={selectedPlace} />}
+				{selectedPlace && restaurantPhotos && (
+					<PlaceDetailsCard place={selectedPlace} restaurantPhotos={restaurantPhotos} />
+				)}
 				{errorMessage && <ErrorMessage message={errorMessage} type={errorType} />}
 				{renderRecommendations()}
 			</VStack>

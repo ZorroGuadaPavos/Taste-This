@@ -2,10 +2,9 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import DummyPhoto from "/dummy_100x100.png";
-import type { Photo } from "./types";
 
 interface PhotoThumbnailsProps {
-	photos: Photo[];
+	photos: string[];
 	placeName: string;
 	onPhotoSelect: (index: number) => void;
 	selectedPhotoIndex?: number;
@@ -43,7 +42,7 @@ export function PhotoThumbnails({
 		<Flex gap={2} transition="all 0.3s ease-in-out" width="100%" height="4rem">
 			{thumbnailPhotos.map((photo, index) => (
 				<Box
-					key={photo.name}
+					key={index}
 					position="relative"
 					height="4rem"
 					borderRadius="md"
@@ -61,7 +60,7 @@ export function PhotoThumbnails({
 					title={`View photo ${index + 1}`}
 				>
 					<Image
-						src={photo.url || DummyPhoto}
+						src={photo || DummyPhoto}
 						alt={`${placeName} - photo ${index + 1}`}
 						objectFit="cover"
 						width="100%"

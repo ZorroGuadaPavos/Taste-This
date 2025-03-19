@@ -11,7 +11,17 @@ export function extractPlaceImage(html) {
 	const imageRegex =
 		/<meta\s+(?:content="([^"]+)"\s+(?:itemprop="image"|property="og:image")|(?:itemprop="image"|property="og:image")\s+content="([^"]+)")/i;
 	const imageMatch = html.match(imageRegex);
-	return imageMatch ? imageMatch[1] || imageMatch[2] : null;
+	let imageUrl = imageMatch ? imageMatch[1] || imageMatch[2] : null;
+
+	if (imageUrl?.includes("streetviewpixels-pa.googleapis.com")) {
+		const panoidMatch = imageUrl.match(/panoid=([^&]+)/);
+		if (panoidMatch) {
+			const panoid = panoidMatch[1];
+			imageUrl = `https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=${panoid}&cb_client=search.gws-prod.gps&w=800&h=400`;
+		}
+	}
+
+	return imageUrl;
 }
 
 export function extractPlaceUrlId(html) {
@@ -36,11 +46,12 @@ export async function searchPlaceById(placeId) {
 	}
 
 	const html = await response.text();
+	// saveResponseData(html, "searchPlaceById.html");
 	const placeUrlId = extractPlaceUrlId(html);
-	const imageUrl = extractPlaceImage(html);
+	const placePhoto = extractPlaceImage(html);
 
 	return {
 		placeUrlId,
-		imageUrl,
+		placePhoto,
 	};
 }

@@ -25,8 +25,8 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 			RestaurantInfoResponseSchema.parse({
 				success: true,
 				placeUrlId: restaurantData.placeUrlId,
-				mainImage: restaurantData.mainImage,
-				images: restaurantData.images || [],
+				placePhoto: restaurantData.placePhoto,
+				reviewPhotos: restaurantData.reviewPhotos,
 			}),
 			200,
 		);

@@ -40,9 +40,9 @@ export async function getRestaurantInfo(query: string): Promise<RestaurantResult
 	}
 }
 
-export async function getRestaurantDishes(placeUrl: string): Promise<SearchResult> {
+export async function getRestaurantDishes(placeUrlId: string): Promise<SearchResult> {
 	try {
-		if (!placeUrl.trim()) {
+		if (!placeUrlId.trim()) {
 			return {
 				error: {
 					type: "error",
@@ -50,7 +50,7 @@ export async function getRestaurantDishes(placeUrl: string): Promise<SearchResul
 				},
 			};
 		}
-		const response = await RestaurantsService.getRestaurantsDishes({ query: placeUrl });
+		const response = await RestaurantsService.getRestaurantsDishes({ query: placeUrlId });
 		return { data: response };
 	} catch (error) {
 		console.error("Error getting restaurant dishes:", error);
@@ -58,30 +58,6 @@ export async function getRestaurantDishes(placeUrl: string): Promise<SearchResul
 			error: {
 				type: "error",
 				message: "An error occurred while fetching dishes. Please try again later.",
-			},
-		};
-	}
-}
-
-// Legacy function - will be removed
-export async function searchRestaurant(restaurantName: string): Promise<SearchResult> {
-	try {
-		if (!restaurantName.trim()) {
-			return {
-				error: {
-					type: "error",
-					message: "Please enter a restaurant name",
-				},
-			};
-		}
-		const response = await RestaurantsService.getRestaurantsDishes({ query: restaurantName });
-		return { data: response };
-	} catch (error) {
-		console.error("Error searching for restaurant:", error);
-		return {
-			error: {
-				type: "error",
-				message: "An error occurred while searching. Please try again later.",
 			},
 		};
 	}

@@ -1,7 +1,7 @@
 import { getPopularDishesModelConfig } from "../../ai-providers/gemini/config.js";
 import { scraper } from "../../scraper/index.js";
 import { getPlaceUrl, searchPlaceById } from "../../scraper/searchPlaceById.js";
-import { saveResponseData } from "../../utils/saveResponse.js";
+// import { saveResponseData } from "../../utils/saveResponse.js";
 
 export async function fetchRestaurantInfo(query) {
 	const placeData = await searchPlaceById(query);
@@ -11,47 +11,35 @@ export async function fetchRestaurantInfo(query) {
 	}
 
 	const placeUrl = getPlaceUrl(placeData.placeUrlId);
-	console.log(`Fetching restaurant data from: ${placeUrl}`);
-
-	// Fetch reviews with highest rated images
-	const reviewsData = await scraper(placeUrl, {
-		sort_type: "highest_rating",
-		pages: "1",
-		clean: true, // Parse the reviews to get a cleaner structure
-	});
-
-	// Extract up to 5 images from the reviews
-	const images = filterImages(reviewsData);
-	console.log(`Found ${images.length} images for restaurant`);
+	const reviewPhotos = await fetchRestaurantReviewPhotos(placeUrl, 6);
 
 	return {
 		query,
 		placeUrlId: placeData.placeUrlId,
-		mainImage: placeData.imageUrl,
-		images,
+		placePhoto: placeData.placePhoto,
+		reviewPhotos: reviewPhotos,
 	};
 }
 
-// Helper function to extract and filter images from scraped data
-function filterImages(imagesData) {
-	if (!imagesData) {
+async function fetchRestaurantReviewPhotos(placeUrl, limit = 6) {
+	const reviewsData = await scraper(placeUrl, { sort_type: "relevant", pages: "1", clean: true });
+	if (!reviewsData || reviewsData === 0) {
 		return [];
 	}
 
-	const imageUrls = [];
-
-	if (Array.isArray(imagesData) && imagesData.length > 0) {
-		for (const review of imagesData) {
-			if (review.images) {
-				for (const img of review.images) {
-					if (img.url && typeof img.url === "string" && imageUrls.length < 6) {
-						imageUrls.push(img.url);
-					}
+	const reviewPhotos = [];
+	for (const review of reviewsData) {
+		if (review.photos) {
+			for (const img of review.photos) {
+				if (img.url && reviewPhotos.length < limit) {
+					reviewPhotos.push(img.url);
 				}
+				if (reviewPhotos.length >= limit) break;
 			}
 		}
+		if (reviewPhotos.length >= limit) break;
 	}
-	return imageUrls;
+	return reviewPhotos;
 }
 
 export async function fetchRestaurantReviews(query) {
@@ -87,7 +75,6 @@ export async function analyzePopularDishes(reviews, geminiModel) {
 
 		try {
 			const result = JSON.parse(responseText);
-			// saveResponseData({ result }, "result");
 			return result;
 		} catch (error) {
 			console.error("Error parsing AI response:", error);

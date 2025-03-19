@@ -1,6 +1,7 @@
+import type { GetRestaurantsResponse } from "@/client";
 import { type PlaceDetails, getPlaceDetails } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
-import { Box, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { memo, useEffect, useRef, useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import { MainPlacePhoto } from "./Photos/MainPlacePhoto";
@@ -37,40 +38,16 @@ const usePlaceDetails = (placeId: string) => {
 	return { placeDetails, isLoading, error };
 };
 
-const NoPhotosAvailable = ({ height }: { height: string | object }) => (
-	<Flex height={height} bg="gray.100" borderRadius="md" justifyContent="center" alignItems="center">
-		<Text color="gray.500">No photos available</Text>
-	</Flex>
-);
-
 interface ExpandedContentProps {
 	placeDetails: PlaceDetails;
+	restaurantPhotos: GetRestaurantsResponse;
 }
 
-const ExpandedContent = ({ placeDetails }: ExpandedContentProps) => {
-	if (!placeDetails.photos || placeDetails.photos.length === 0) {
-		return (
-			<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
-				<Flex
-					flex={{ base: "none", md: 1 }}
-					p={3}
-					align="center"
-					justify="center"
-					height={{ base: "12rem", md: "100%" }}
-				>
-					<NoPhotosAvailable height="100%" />
-				</Flex>
-				<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
-					<PlaceDetailsContent placeDetails={placeDetails} open={true} />
-				</Flex>
-			</Flex>
-		);
-	}
-
+const ExpandedContent = ({ placeDetails, restaurantPhotos }: ExpandedContentProps) => {
 	return (
 		<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
 			<Flex flex={{ base: "none", md: 1 }} p={3} align="center" justify="center" height={{ base: "12rem", md: "100%" }}>
-				<MainPlacePhoto placeName={placeDetails.displayName} />
+				<MainPlacePhoto placeName={placeDetails.displayName} imageUrl={restaurantPhotos.placePhoto || undefined} />
 			</Flex>
 
 			<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
@@ -84,26 +61,27 @@ interface CollapsedContentProps {
 	placeDetails: PlaceDetails;
 	selectedPhotoIndex: number;
 	onPhotoSelect: (index: number) => void;
+	restaurantPhotos: GetRestaurantsResponse;
 }
 
-const CollapsedContent = ({ placeDetails, selectedPhotoIndex, onPhotoSelect }: CollapsedContentProps) => {
-	if (!placeDetails.photos || placeDetails.photos.length === 0) {
-		return (
-			<Box p={3} height="100%">
-				<NoPhotosAvailable height="100%" />
-			</Box>
-		);
-	}
-
+const CollapsedContent = ({
+	placeDetails,
+	selectedPhotoIndex,
+	onPhotoSelect,
+	restaurantPhotos,
+}: CollapsedContentProps) => {
 	return (
 		<Box p={3} height="100%">
 			<Flex direction="column" gap={2} height="100%">
 				<Box flex="1" minHeight="0">
-					<MainPlacePhoto placeName={placeDetails.displayName} />
+					<MainPlacePhoto
+						placeName={placeDetails.displayName}
+						imageUrl={restaurantPhotos?.placePhoto || restaurantPhotos?.reviewPhotos?.[selectedPhotoIndex]}
+					/>
 				</Box>
 				<Box height="4rem">
 					<PhotoThumbnails
-						photos={placeDetails.photos}
+						photos={restaurantPhotos?.reviewPhotos || []}
 						placeName={placeDetails.displayName}
 						selectedPhotoIndex={selectedPhotoIndex}
 						onPhotoSelect={onPhotoSelect}
@@ -114,7 +92,12 @@ const CollapsedContent = ({ placeDetails, selectedPhotoIndex, onPhotoSelect }: C
 	);
 };
 
-function PlaceDetailsCardComponent({ place }: { place: Place }) {
+interface PlaceDetailsCardProps {
+	place: Place;
+	restaurantPhotos: GetRestaurantsResponse;
+}
+
+function PlaceDetailsCardComponent({ place, restaurantPhotos }: PlaceDetailsCardProps) {
 	const { placeDetails, isLoading, error } = usePlaceDetails(place.id);
 	const { open, onToggle } = useDisclosure({ defaultOpen: false });
 	const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
@@ -141,12 +124,13 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 
 			<Box ref={detailsRef} height={{ base: "auto", md: "20rem" }} overflow="hidden" position="relative">
 				{open ? (
-					<ExpandedContent placeDetails={placeDetails} />
+					<ExpandedContent placeDetails={placeDetails} restaurantPhotos={restaurantPhotos} />
 				) : (
 					<CollapsedContent
 						placeDetails={placeDetails}
 						selectedPhotoIndex={selectedPhotoIndex}
 						onPhotoSelect={setSelectedPhotoIndex}
+						restaurantPhotos={restaurantPhotos}
 					/>
 				)}
 			</Box>
@@ -155,5 +139,8 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 }
 
 export const PlaceDetailsCard = memo(PlaceDetailsCardComponent, (prevProps, nextProps) => {
-	return prevProps.place.id === nextProps.place.id;
+	return (
+		prevProps.place.id === nextProps.place.id &&
+		prevProps.restaurantPhotos?.placeUrlId === nextProps.restaurantPhotos?.placeUrlId
+	);
 });

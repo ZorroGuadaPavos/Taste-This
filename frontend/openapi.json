@@ -47,11 +47,11 @@
 										"placeUrlId": {
 											"type": "string"
 										},
-										"mainImage": {
+										"placePhoto": {
 											"type": "string",
 											"nullable": true
 										},
-										"images": {
+										"reviewPhotos": {
 											"type": "array",
 											"items": {
 												"type": "string"
@@ -59,7 +59,7 @@
 											"default": []
 										}
 									},
-									"required": ["success", "placeUrlId", "mainImage"]
+									"required": ["success", "placeUrlId", "placePhoto"]
 								}
 							}
 						}

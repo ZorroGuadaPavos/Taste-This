@@ -6,9 +6,10 @@ interface MainPlacePhotoProps {
 	placeName: string;
 	height?: string | object;
 	onClick?: () => void;
+	imageUrl?: string;
 }
 
-export function MainPlacePhoto({ placeName, height = "100%", onClick }: MainPlacePhotoProps) {
+export function MainPlacePhoto({ placeName, height = "100%", onClick, imageUrl }: MainPlacePhotoProps) {
 	const [hasError, setHasError] = useState(false);
 
 	const handleImageError = () => {
@@ -26,7 +27,7 @@ export function MainPlacePhoto({ placeName, height = "100%", onClick }: MainPlac
 	return (
 		<Box position="relative" width="100%" height={height} borderRadius="md" overflow="hidden">
 			<Image
-				src={DummyPhoto}
+				src={imageUrl || DummyPhoto}
 				alt={`${placeName} photo`}
 				objectFit="cover"
 				width="100%"

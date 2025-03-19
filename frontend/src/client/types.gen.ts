@@ -10,8 +10,8 @@ export type GetRestaurantsData = {
 export type GetRestaurantsResponse = ({
     success: boolean;
     placeUrlId: string;
-    mainImage: (string) | null;
-    images?: Array<(string)>;
+    placePhoto: (string) | null;
+    reviewPhotos?: Array<(string)>;
 });
 
 export type GetRestaurantsDishesData = {

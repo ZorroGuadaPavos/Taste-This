@@ -21,8 +21,8 @@ const DishesResponseSchema = z.object({
 const RestaurantInfoResponseSchema = z.object({
 	success: z.boolean(),
 	placeUrlId: z.string(),
-	mainImage: z.string().nullable(),
-	images: z.array(z.string()).default([]),
+	placePhoto: z.string().nullable(),
+	reviewPhotos: z.array(z.string()).default([]),
 });
 
 const ErrorResponseSchema = z.object({

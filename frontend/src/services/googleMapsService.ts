@@ -56,19 +56,6 @@ export interface PlaceDetails {
 	};
 	businessStatus?: string;
 	types?: string[];
-	regularOpeningHours?: {
-		openNow?: boolean;
-	};
-	photos?: Array<{
-		name: string;
-		widthPx?: number;
-		heightPx?: number;
-		authorAttributions?: Array<{
-			displayName?: string;
-			uri?: string;
-			photoUri?: string;
-		}>;
-	}>;
 }
 
 export interface PlaceDetailsResponse {
@@ -142,8 +129,6 @@ function transformPlaceDetails(rawPlace: any): PlaceDetails {
 		priceRange: rawPlace.priceRange || undefined,
 		businessStatus: rawPlace.businessStatus,
 		types: rawPlace.types || [],
-		regularOpeningHours: {},
-		photos: [],
 	};
 }
 
