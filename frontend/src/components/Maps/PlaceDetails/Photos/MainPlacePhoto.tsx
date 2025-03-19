@@ -1,6 +1,5 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import DummyPhoto from "/dummy_800x400.png";
 
 interface MainPlacePhotoProps {
 	placeName: string;
@@ -24,10 +23,14 @@ export function MainPlacePhoto({ placeName, height = "100%", onClick, imageUrl }
 		);
 	}
 
+	if (!imageUrl) {
+		return <Skeleton width="100%" height={height} borderRadius="md" />;
+	}
+
 	return (
 		<Box position="relative" width="100%" height={height} borderRadius="md" overflow="hidden">
 			<Image
-				src={imageUrl || DummyPhoto}
+				src={imageUrl}
 				alt={`${placeName} photo`}
 				objectFit="cover"
 				width="100%"

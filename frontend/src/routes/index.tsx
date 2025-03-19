@@ -1,101 +1,35 @@
-import type { GetRestaurantsDishesResponse, GetRestaurantsResponse } from "@/client";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { LoaderReviews } from "@/components/LoaderReviews";
 import { PlaceDetailsCard } from "@/components/Maps/PlaceDetails";
-import { RecommendationsList } from "@/components/RecommendationsList";
+import { Recommendations } from "@/components/Recommendations/Recommendations";
 import { Search } from "@/components/Search";
 import { GoogleMapsConfig } from "@/config/maps";
-import { type TextSearchResponse, searchPlacesByText } from "@/services/googleMapsService";
-import { getRestaurantDishes, getRestaurantInfo } from "@/services/restaurantService";
-import type { Place } from "@/types/Place";
+import { useRestaurantData } from "@/hooks/useRestaurantData";
+import { useSearch } from "@/hooks/useSearch";
+import { useSelectedPlace } from "@/hooks/useSelectedPlace";
 import { Container, VStack } from "@chakra-ui/react";
 import { APILoader } from "@googlemaps/extended-component-library/react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
 
 export const Route = createFileRoute("/")({
 	component: LandingPage,
 });
 
 function LandingPage() {
-	const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [recommendations, setRecommendations] = useState<GetRestaurantsDishesResponse | null>(null);
-	const [restaurantPhotos, setRestaurantPhotos] = useState<GetRestaurantsResponse | null>(null);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [errorType, setErrorType] = useState<"notFound" | "error">("error");
-	const [restaurant, setRestaurant] = useState("");
-	const [textSearchResults, setTextSearchResults] = useState<TextSearchResponse | null>(null);
-	const [isTextSearching, setIsTextSearching] = useState(false);
+	const { recommendations, photos, isLoading, errorMessage: dataError, errorType, fetchData } = useRestaurantData();
 
-	const searchForRestaurants = useCallback(async () => {
-		if (!restaurant.trim()) return;
+	const {
+		restaurant,
+		setRestaurant,
+		textSearchResults,
+		isTextSearching,
+		errorMessage: searchError,
+		searchForRestaurants,
+		setTextSearchResults,
+	} = useSearch();
 
-		setIsTextSearching(true);
-		setTextSearchResults(null);
-		setErrorMessage(null);
-		const result = await searchPlacesByText(restaurant);
-
-		if (result.data) {
-			setTextSearchResults(result.data);
-		} else if (result.error) {
-			setErrorType("error");
-			setErrorMessage(result.error.message);
-		}
-		setIsTextSearching(false);
-	}, [restaurant]);
-
-	const fetchRecommendations = useCallback(async (searchQuery: string) => {
-		if (!searchQuery) return;
-
-		setIsLoading(true);
-		setErrorMessage(null);
-
-		const restaurantResult = await getRestaurantInfo(searchQuery);
-
-		if (restaurantResult.error) {
-			setErrorType(restaurantResult.error.type);
-			setErrorMessage(restaurantResult.error.message);
-			setRecommendations(null);
-			setIsLoading(false);
-			return;
-		}
-
-		if (restaurantResult.data) {
-			setRestaurantPhotos(restaurantResult.data);
-
-			const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrlId);
-
-			if (dishesResult.data) {
-				setRecommendations(dishesResult.data);
-			} else if (dishesResult.error) {
-				setErrorType(dishesResult.error.type);
-				setErrorMessage(dishesResult.error.message);
-				setRecommendations(null);
-			}
-		}
-
-		setIsLoading(false);
-	}, []);
-
-	const handleRestaurantSelect = useCallback(
-		async (place: Place) => {
-			setSelectedPlace(place);
-			setTextSearchResults(null);
-			setRestaurant(place.name);
-			const cid = place.googleMapsUrl?.split("cid=")[1];
-			cid ? await fetchRecommendations(cid) : await fetchRecommendations(place.name);
-		},
-		[fetchRecommendations],
-	);
-
-	const renderRecommendations = () => {
-		if (isLoading) return <LoaderReviews />;
-		if (selectedPlace && recommendations)
-			return <RecommendationsList recommendations={recommendations} place={selectedPlace} />;
-	};
+	const { selectedPlace, handleRestaurantSelect } = useSelectedPlace(fetchData, setRestaurant, setTextSearchResults);
 
 	return (
 		<Container maxW="container.xl" py={10} minH="100dvh" display="flex" flexDirection="column">
@@ -111,13 +45,12 @@ function LandingPage() {
 					onPlaceSelect={handleRestaurantSelect}
 					onClearResults={() => setTextSearchResults(null)}
 				/>
-				{selectedPlace && restaurantPhotos && (
-					<PlaceDetailsCard place={selectedPlace} restaurantPhotos={restaurantPhotos} />
+				{selectedPlace && <PlaceDetailsCard place={selectedPlace} photos={photos} />}
+				{(dataError || searchError) && (
+					<ErrorMessage message={dataError || searchError || "An error occurred"} type={errorType} />
 				)}
-				{errorMessage && <ErrorMessage message={errorMessage} type={errorType} />}
-				{renderRecommendations()}
+				<Recommendations isLoading={isLoading} selectedPlace={selectedPlace} recommendations={recommendations} />
 			</VStack>
-
 			<Footer />
 		</Container>
 	);

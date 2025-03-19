@@ -54,8 +54,10 @@ export interface PlaceDetails {
 			nanos?: number;
 		};
 	};
-	businessStatus?: string;
 	types?: string[];
+	regularOpeningHours?: {
+		openNow?: boolean;
+	};
 }
 
 export interface PlaceDetailsResponse {
@@ -127,8 +129,8 @@ function transformPlaceDetails(rawPlace: any): PlaceDetails {
 		rating: rawPlace.rating,
 		priceLevel: rawPlace.priceLevel,
 		priceRange: rawPlace.priceRange || undefined,
-		businessStatus: rawPlace.businessStatus,
 		types: rawPlace.types || [],
+		regularOpeningHours: rawPlace.regularOpeningHours || {},
 	};
 }
 
@@ -143,7 +145,7 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetailsResu
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": GoogleMapsConfig.apiKey,
 				"X-Goog-FieldMask":
-					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,priceRange,businessStatus,types",
+					"id,displayName,formattedAddress,websiteUri,internationalPhoneNumber,rating,priceLevel,priceRange,regularOpeningHours,types",
 			},
 		});
 
