@@ -1,6 +1,6 @@
 import { type PlaceDetails, getPlaceDetails } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
-import { Box, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { memo, useEffect, useRef, useState } from "react";
 import { ErrorMessage } from "./ErrorMessage";
 import { MainPlacePhoto } from "./Photos/MainPlacePhoto";
@@ -20,15 +20,18 @@ const usePlaceDetails = (placeId: string) => {
 
 			setIsLoading(true);
 			setError(null);
-			const result = await getPlaceDetails(placeId);
-
-			if (result.data) {
-				setPlaceDetails(result.data.place);
-			} else if (result.error) {
-				setError(result.error.message);
+			try {
+				const result = await getPlaceDetails(placeId);
+				if (result.data) {
+					setPlaceDetails(result.data.place);
+				} else if (result.error) {
+					setError(result.error.message);
+				}
+			} catch (err) {
+				setError("Failed to fetch place details");
+			} finally {
+				setIsLoading(false);
 			}
-
-			setIsLoading(false);
 		};
 
 		fetchPlaceDetails();
@@ -37,85 +40,62 @@ const usePlaceDetails = (placeId: string) => {
 	return { placeDetails, isLoading, error };
 };
 
-const NoPhotosAvailable = ({ height }: { height: string | object }) => (
-	<Flex height={height} bg="gray.100" borderRadius="md" justifyContent="center" alignItems="center">
-		<Text color="gray.500">No photos available</Text>
-	</Flex>
-);
-
-interface ExpandedContentProps {
-	placeDetails: PlaceDetails;
-	selectedPhotoIndex: number;
-}
-
-const ExpandedContent = ({ placeDetails, selectedPhotoIndex }: ExpandedContentProps) => {
-	if (!placeDetails.photos || placeDetails.photos.length === 0) {
-		return (
-			<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
-				<Flex
-					flex={{ base: "none", md: 1 }}
-					p={3}
-					align="center"
-					justify="center"
-					height={{ base: "12rem", md: "100%" }}
-				>
-					<NoPhotosAvailable height="100%" />
-				</Flex>
-				<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
-					<PlaceDetailsContent placeDetails={placeDetails} open={true} />
-				</Flex>
-			</Flex>
-		);
-	}
-
-	return (
-		<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
-			<Flex flex={{ base: "none", md: 1 }} p={3} align="center" justify="center" height={{ base: "12rem", md: "100%" }}>
-				<MainPlacePhoto photo={placeDetails.photos[selectedPhotoIndex]} placeName={placeDetails.displayName} />
-			</Flex>
-
-			<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
-				<PlaceDetailsContent placeDetails={placeDetails} open={true} />
-			</Flex>
-		</Flex>
-	);
-};
-
-interface CollapsedContentProps {
-	placeDetails: PlaceDetails;
-	selectedPhotoIndex: number;
-	onPhotoSelect: (index: number) => void;
-}
-
-const CollapsedContent = ({ placeDetails, selectedPhotoIndex, onPhotoSelect }: CollapsedContentProps) => {
-	if (!placeDetails.photos || placeDetails.photos.length === 0) {
-		return (
-			<Box p={3} height="100%">
-				<NoPhotosAvailable height="100%" />
-			</Box>
-		);
-	}
-
-	return (
+const PhotoGallery = memo(
+	({
+		placeDetails,
+		photos,
+		selectedIndex,
+		onPhotoSelect,
+	}: {
+		placeDetails: PlaceDetails;
+		photos: string[];
+		selectedIndex: number;
+		onPhotoSelect: (index: number) => void;
+	}) => (
 		<Box p={3} height="100%">
 			<Flex direction="column" gap={2} height="100%">
 				<Box flex="1" minHeight="0">
-					<MainPlacePhoto photo={placeDetails.photos[selectedPhotoIndex]} placeName={placeDetails.displayName} />
+					<MainPlacePhoto placeName={placeDetails.displayName} imageUrl={photos[selectedIndex] || ""} />
 				</Box>
 				<Box height="4rem">
 					<PhotoThumbnails
-						photos={placeDetails.photos}
+						photos={photos}
 						placeName={placeDetails.displayName}
-						selectedPhotoIndex={selectedPhotoIndex}
+						selectedPhotoIndex={selectedIndex}
 						onPhotoSelect={onPhotoSelect}
 					/>
 				</Box>
 			</Flex>
 		</Box>
-	);
-};
+	),
+);
 
-function PlaceDetailsCardComponent({ place }: { place: Place }) {
+const ExpandedView = memo(
+	({
+		placeDetails,
+		photos,
+	}: {
+		placeDetails: PlaceDetails;
+		photos: string[];
+	}) => (
+		<Flex direction={{ base: "column", md: "row" }} height="100%" overflow="hidden">
+			<Flex flex={{ base: "none", md: 1 }} p={3} align="center" justify="center" height={{ base: "12rem", md: "100%" }}>
+				<MainPlacePhoto placeName={placeDetails.displayName} imageUrl={photos[0] || undefined} />
+			</Flex>
+			<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
+				<PlaceDetailsContent placeDetails={placeDetails} open={true} />
+			</Flex>
+		</Flex>
+	),
+);
+
+function PlaceDetailsCardComponent({
+	place,
+	photos,
+}: {
+	place: Place;
+	photos: string[];
+}) {
 	const { placeDetails, isLoading, error } = usePlaceDetails(place.id);
 	const { open, onToggle } = useDisclosure({ defaultOpen: false });
 	const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
@@ -142,11 +122,12 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 
 			<Box ref={detailsRef} height={{ base: "auto", md: "20rem" }} overflow="hidden" position="relative">
 				{open ? (
-					<ExpandedContent placeDetails={placeDetails} selectedPhotoIndex={selectedPhotoIndex} />
+					<ExpandedView placeDetails={placeDetails} photos={photos} />
 				) : (
-					<CollapsedContent
+					<PhotoGallery
 						placeDetails={placeDetails}
-						selectedPhotoIndex={selectedPhotoIndex}
+						photos={photos}
+						selectedIndex={selectedPhotoIndex}
 						onPhotoSelect={setSelectedPhotoIndex}
 					/>
 				)}
@@ -156,5 +137,9 @@ function PlaceDetailsCardComponent({ place }: { place: Place }) {
 }
 
 export const PlaceDetailsCard = memo(PlaceDetailsCardComponent, (prevProps, nextProps) => {
-	return prevProps.place.id === nextProps.place.id;
+	return (
+		prevProps.place.id === nextProps.place.id &&
+		prevProps.photos.length === nextProps.photos.length &&
+		prevProps.photos.every((photo, index) => photo === nextProps.photos[index])
+	);
 });

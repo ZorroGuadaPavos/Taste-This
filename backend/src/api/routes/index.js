@@ -1,8 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import analysisRouter from "../analysis/api.js";
+import restaurantsRouter from "../restaurants/api.js";
 
 const apiRouter = new OpenAPIHono();
 
-apiRouter.route("/analysis", analysisRouter);
+apiRouter.route("/restaurants", restaurantsRouter);
 
 export default apiRouter;

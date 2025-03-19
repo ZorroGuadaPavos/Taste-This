@@ -1,16 +1,14 @@
-import { GoogleMapsConfig } from "@/config/maps";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 import { useState } from "react";
-import type { Photo } from "./types";
 
 interface MainPlacePhotoProps {
-	photo: Photo;
 	placeName: string;
 	height?: string | object;
 	onClick?: () => void;
+	imageUrl?: string;
 }
 
-export function MainPlacePhoto({ photo, placeName, height = "100%", onClick }: MainPlacePhotoProps) {
+export function MainPlacePhoto({ placeName, height = "100%", onClick, imageUrl }: MainPlacePhotoProps) {
 	const [hasError, setHasError] = useState(false);
 
 	const handleImageError = () => {
@@ -25,10 +23,14 @@ export function MainPlacePhoto({ photo, placeName, height = "100%", onClick }: M
 		);
 	}
 
+	if (!imageUrl) {
+		return <Skeleton width="100%" height={height} borderRadius="md" />;
+	}
+
 	return (
 		<Box position="relative" width="100%" height={height} borderRadius="md" overflow="hidden">
 			<Image
-				src={`https://places.googleapis.com/v1/${photo.name}/media?key=${GoogleMapsConfig.apiKey}&maxHeightPx=400&maxWidthPx=800`}
+				src={imageUrl}
 				alt={`${placeName} photo`}
 				objectFit="cover"
 				width="100%"

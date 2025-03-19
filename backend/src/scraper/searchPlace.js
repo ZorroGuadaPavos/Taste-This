@@ -1,4 +1,4 @@
-import { saveResponseData } from "../utils/saveResponse.js";
+// import { saveResponseData } from "../utils/saveResponse.js";
 
 /**
  * Searches for a place on Google Maps and returns the first result URL
@@ -19,7 +19,7 @@ export async function searchPlace(placeName) {
 	}
 
 	const html = await response.text();
-	saveResponseData(html, "search", false);
+	// saveResponseData(html, "search", false);
 
 	// Use the same regex pattern as searchPlaceById
 	const placeIdRegex = /0x[0-9a-f]+:0x[0-9a-f]+/g;

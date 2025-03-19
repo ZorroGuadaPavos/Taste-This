@@ -1,10 +1,9 @@
-import { GoogleMapsConfig } from "@/config/maps";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+// import { GoogleMapsConfig } from "@/config/maps";
+import { Box, Flex, Image, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
-import type { Photo } from "./types";
 
 interface PhotoThumbnailsProps {
-	photos: Photo[];
+	photos: string[];
 	placeName: string;
 	onPhotoSelect: (index: number) => void;
 	selectedPhotoIndex?: number;
@@ -24,25 +23,17 @@ export function PhotoThumbnails({
 	}
 
 	const thumbnailPhotos = photos.slice(0, maxThumbnails);
-	const [hasError, setHasError] = useState(false);
+	const [errorIndices, setErrorIndices] = useState<Set<number>>(new Set());
 
-	const handleImageError = () => {
-		setHasError(true);
+	const handleImageError = (index: number) => {
+		setErrorIndices((prev) => new Set([...prev, index]));
 	};
-
-	if (hasError) {
-		return (
-			<Flex width="100%" bg="gray.100" borderRadius="md" justifyContent="center" alignItems="center">
-				<Text color="gray.500">Unable to load image</Text>
-			</Flex>
-		);
-	}
 
 	return (
 		<Flex gap={2} transition="all 0.3s ease-in-out" width="100%" height="4rem">
 			{thumbnailPhotos.map((photo, index) => (
 				<Box
-					key={photo.name}
+					key={index}
 					position="relative"
 					height="4rem"
 					borderRadius="md"
@@ -59,16 +50,20 @@ export function PhotoThumbnails({
 					}}
 					title={`View photo ${index + 1}`}
 				>
-					<Image
-						src={`https://places.googleapis.com/v1/${photo.name}/media?key=${GoogleMapsConfig.apiKey}&maxHeightPx=100&maxWidthPx=100`}
-						alt={`${placeName} - photo ${index + 1}`}
-						objectFit="cover"
-						width="100%"
-						height="100%"
-						borderRadius="md"
-						loading="lazy"
-						onError={handleImageError}
-					/>
+					{!photo || errorIndices.has(index) ? (
+						<Skeleton width="100%" height="100%" borderRadius="md" />
+					) : (
+						<Image
+							src={photo}
+							alt={`${placeName} - photo ${index + 1}`}
+							objectFit="cover"
+							width="100%"
+							height="100%"
+							borderRadius="md"
+							loading="lazy"
+							onError={() => handleImageError(index)}
+						/>
+					)}
 				</Box>
 			))}
 		</Flex>

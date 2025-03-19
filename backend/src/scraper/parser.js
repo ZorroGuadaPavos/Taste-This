@@ -23,7 +23,7 @@ export default async function parseReviews(reviews) {
 				text: review[2][15]?.[0]?.[0] || null,
 				// language: review[2][14]?.[0] || null,
 			},
-			images:
+			photos:
 				review[2][2]?.map((image) => ({
 					id: image[0],
 					url: image[1][6][0],

@@ -1,14 +1,43 @@
 // import { saveResponseData } from "../utils/saveResponse.js";
-/**
- * Searches for a place on Google Maps and returns the first result URL
- * @param {string} placeId - Google maps cid eg: placeId=5158916063863294215
- * @returns {Promise<string>} - The Google Maps URL for the place
- * @throws {Error} - If no results are found or if the search fails
- */
-export async function searchPlaceById(placeId) {
-	const searchUrl = `https://maps.google.com/?cid=${placeId}`;
 
-	const response = await fetch(searchUrl);
+export function getPlaceUrl(placeId) {
+	if (!placeId) {
+		throw new Error("Place ID is required");
+	}
+	return `https://www.google.com/maps/place/${placeId}/@0,0,15z/data=!4m5!3m4!1s${placeId}!8m2!3d0!4d0`;
+}
+
+export function extractPlaceImage(html) {
+	const imageRegex =
+		/<meta\s+(?:content="([^"]+)"\s+(?:itemprop="image"|property="og:image")|(?:itemprop="image"|property="og:image")\s+content="([^"]+)")/i;
+	const imageMatch = html.match(imageRegex);
+	let imageUrl = imageMatch ? imageMatch[1] || imageMatch[2] : null;
+
+	if (imageUrl?.includes("streetviewpixels-pa.googleapis.com")) {
+		const panoidMatch = imageUrl.match(/panoid=([^&]+)/);
+		if (panoidMatch) {
+			const panoid = panoidMatch[1];
+			imageUrl = `https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=${panoid}&cb_client=search.gws-prod.gps&w=800&h=400`;
+		}
+	}
+
+	return imageUrl;
+}
+
+export function extractPlaceUrlId(html) {
+	// Pattern: 0x0:0x...
+	const placeIdRegex = /0x[0-9a-f]+:0x[0-9a-f]+/g;
+	const matches = html.match(placeIdRegex);
+
+	if (matches && matches.length > 0) {
+		return matches[0];
+	}
+
+	return null;
+}
+
+export async function searchPlaceById(placeId) {
+	const response = await fetch(`https://maps.google.com/?cid=${placeId}`);
 
 	if (!response.ok) {
 		const error = new Error(`Search request failed: ${response.statusText}`);
@@ -17,18 +46,12 @@ export async function searchPlaceById(placeId) {
 	}
 
 	const html = await response.text();
-	// saveResponseData(html, "byId", false);
+	// saveResponseData(html, "searchPlaceById.html");
+	const placeUrlId = extractPlaceUrlId(html);
+	const placePhoto = extractPlaceImage(html);
 
-	// Pattern: 0x0:0x...
-	const placeIdRegex = /0x[0-9a-f]+:0x[0-9a-f]+/g;
-	const matches = html.match(placeIdRegex);
-
-	if (matches && matches.length > 0) {
-		const match = matches[0];
-		return `https://www.google.com/maps/place/${match}/@0,0,15z/data=!4m5!3m4!1s${match}!8m2!3d0!4d0`;
-	}
-
-	const error = new Error(`No valid place ID found for: ${placeId}`);
-	error.status = 404;
-	throw error;
+	return {
+		placeUrlId,
+		placePhoto,
+	};
 }
