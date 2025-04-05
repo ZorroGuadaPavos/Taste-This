@@ -1,46 +1,21 @@
 import { getPopularDishesModelConfig } from "../../ai-providers/gemini/config.js";
-import { reviews_scraper } from "../../scraper/index.js";
-import parsePlace from "../../scraper/parsers/place.js";
-import { fetchPlaceData } from "../../scraper/public_endpoints/place.js";
-import { getFeatureID, getPlaceIds } from "../../scraper/searchPlaceById.js";
+import { places_scraper, reviews_scraper } from "../../scraper/index.js";
 import { saveResponseData } from "../../utils/saveResponse.js";
 
 export async function fetchRestaurants(restaurantName) {
 	try {
-		const placeIdsResult = await getPlaceIds(restaurantName);
-		if (!placeIdsResult.success) {
-			return { success: false, error: placeIdsResult.error || "Failed to retrieve place IDs" };
+		const scrapeResult = await places_scraper(restaurantName, { limit: 5 });
+
+		if (!scrapeResult.success) {
+			return { success: false, error: scrapeResult.error };
 		}
-
-		const placeIds = placeIdsResult.placeIds;
-
-		const restaurantsData = await Promise.all(
-			placeIds.slice(0, 5).map(async (placeId) => {
-				try {
-					const featureId = await getFeatureID(placeId);
-					if (!featureId) {
-						console.warn(`Feature ID not found for place ID: ${placeId}`);
-						return null;
-					}
-					const placeData = await fetchPlaceData(featureId);
-					const parsedData = await parsePlace(placeData);
-					// saveResponseData(parsedData, "PlaceData");
-					return parsedData;
-				} catch (error) {
-					console.error(`Error processing place ID ${placeId}:`, error.message);
-					return null;
-				}
-			}),
-		);
-
-		const filteredRestaurants = restaurantsData.filter((data) => data !== null);
 
 		return {
 			success: true,
-			restaurants: filteredRestaurants,
+			restaurants: scrapeResult.places,
 		};
 	} catch (error) {
-		console.error("Failed to fetch restaurants:", error.message);
+		console.error("Failed to fetch restaurants in service:", error.message);
 		return { success: false, error: "Failed to fetch restaurants information" };
 	}
 }
