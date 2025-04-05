@@ -7,11 +7,11 @@ import type { GetRestaurantsData, GetRestaurantsResponse, GetRestaurantsDishesDa
 
 export class RestaurantsService {
     /**
-     * Get place URL from query
-     * Returns the Google Maps URL for a place based on the query
+     * Get restaurants matching query
+     * Returns a list of restaurants matching the search query
      * @param data The data for the request.
      * @param data.query identifier of the restaurant
-     * @returns unknown Place URL found successfully
+     * @returns unknown Restaurants found successfully
      * @throws ApiError
      */
     public static getRestaurants(data: GetRestaurantsData): CancelablePromise<GetRestaurantsResponse> {
@@ -22,7 +22,7 @@ export class RestaurantsService {
                 query: data.query
             },
             errors: {
-                400: 'Bad request or URL not found',
+                400: 'Bad request or no restaurants found',
                 500: 'Server error'
             }
         });
