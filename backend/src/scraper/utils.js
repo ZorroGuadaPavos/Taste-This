@@ -1,21 +1,19 @@
-import { URL } from "node:url";
-import listugcposts from "./listugcposts.js";
-import parseReviews from "./parser.js";
+import parseReviews from "./parsers/reviews.js";
+import { fetchReviews } from "./public_endpoints/reviews.js";
 import { SortEnum } from "./types.js";
 
 /**
  * Validates parameters for the Google Maps review scraper.
  *
- * @param {string} url - Must include "https://www.google.com/maps/place/".
+ * @param {string} placeId - The Google Maps place ID.
  * @param {string} sort_type - Must be a valid key in SortEnum.
  * @param {string|number} pages - "max" or a number.
  * @param {boolean} clean - Must be a boolean.
  * @throws {Error} If any parameter is invalid.
  */
-export function validateParams(url, sort_type, pages, clean) {
-	const parsedUrl = new URL(url);
-	if (parsedUrl.host !== "www.google.com" || !parsedUrl.pathname.startsWith("/maps/place/")) {
-		throw new Error(`Invalid URL: ${url}`);
+export function validateParams(placeId, sort_type, pages, clean) {
+	if (!placeId) {
+		throw new Error("Place ID is required");
 	}
 	if (!SortEnum[sort_type]) {
 		throw new Error(`Invalid sort type: ${sort_type}`);
@@ -29,30 +27,9 @@ export function validateParams(url, sort_type, pages, clean) {
 }
 
 /**
- * Fetches reviews from a given URL with sorting and pagination options.
+ * Paginates through reviews for a given place ID.
  *
- * @param {string} url - The URL to fetch reviews from.
- * @param {string} sort - The sorting option for the reviews.
- * @param {string} [nextPage=""] - Token for the next page, if any.
- * @param {string} [search_query=""] - Search query to filter reviews, if any.
- * @returns {Promise<Object>} Parsed JSON data of reviews.
- * @throws {Error} If the request fails or the response is invalid.
- */
-export async function fetchReviews(url, sort, nextPage = "", search_query = "") {
-	const apiUrl = listugcposts(url, sort, nextPage, search_query);
-	const response = await fetch(apiUrl);
-	if (!response.ok) {
-		throw new Error(`Failed to fetch reviews: ${response.statusText}`);
-	}
-	const textData = await response.text();
-	const rawData = textData.split(")]}'")[1];
-	return JSON.parse(rawData);
-}
-
-/**
- * Paginates through reviews from a given URL.
- *
- * @param {string} url - The URL to fetch reviews from.
+ * @param {string} placeId - The Google Maps place ID.
  * @param {string} sort - Sorting parameter for reviews.
  * @param {string|number} pages - Number of pages or "max".
  * @param {string} search_query - Search query to filter reviews.
@@ -60,16 +37,15 @@ export async function fetchReviews(url, sort, nextPage = "", search_query = "") 
  * @param {Array} initialData - Initial data containing reviews and next page token.
  * @returns {Promise<Array>} Array of reviews or parsed reviews.
  */
-export async function paginateReviews(url, sort, pages, search_query, clean, initialData) {
+export async function paginateReviews(placeId, sort, pages, search_query, clean, initialData) {
 	let reviews = initialData[2];
 	let nextPage = initialData[1]?.replace(/"/g, "");
 	let currentPage = 2;
 	while (nextPage && (pages === "max" || currentPage <= +pages)) {
-		const data = await fetchReviews(url, sort, nextPage, search_query);
+		const data = await fetchReviews(placeId, sort, nextPage, search_query);
 		reviews = [...reviews, ...data[2]];
 		nextPage = data[1]?.replace(/"/g, "");
 		if (!nextPage) break;
-		// await new Promise((resolve) => setTimeout(resolve, 1000)); // Avoid rate-limiting
 		currentPage++;
 	}
 	return clean ? await parseReviews(reviews) : reviews;

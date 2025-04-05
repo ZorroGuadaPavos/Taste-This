@@ -18,11 +18,26 @@ const DishesResponseSchema = z.object({
 	popularDishes: z.array(DishSchema),
 });
 
-const RestaurantInfoResponseSchema = z.object({
+const RestaurantSchema = z.object({
+	id: z.string().nullable(),
+	name: z.string().nullable(),
+	rating: z.number().nullable(),
+	reviewCount: z.number().nullable(),
+	categories: z.array(z.string()).nullable(),
+	address: z.string().nullable(),
+	priceLevel: z.string().nullable(),
+	openNow: z.boolean(),
+	phone: z.string().nullable(),
+	website: z.string().nullable(),
+	photos: z.array(z.string()),
+	// videos: z.array(z.string()),
+	accessibility: z.array(z.string()).nullable(),
+});
+
+const RestaurantsResponseSchema = z.object({
 	success: z.boolean(),
-	placeUrlId: z.string(),
-	placePhoto: z.string().nullable(),
-	reviewPhotos: z.array(z.string()).default([]),
+	restaurants: z.array(RestaurantSchema),
+	error: z.string().optional(),
 });
 
 const ErrorResponseSchema = z.object({
@@ -33,7 +48,8 @@ const ErrorResponseSchema = z.object({
 export {
 	RestaurantIdRequestSchema,
 	DishesResponseSchema,
-	RestaurantInfoResponseSchema,
+	RestaurantsResponseSchema,
 	ErrorResponseSchema,
 	DishSchema,
+	RestaurantSchema,
 };

@@ -1,25 +1,23 @@
 {
-  "name": "maps_scraper",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "start": "bun src/main.js",
-    "dev": "bun --hot --watch src/main.js",
-    "lint": "biome lint .",
-    "format": "biome format . --write"
-  },
-  "dependencies": {
-    "@google/generative-ai": "^0.24.0",
-    "@hono/swagger-ui": "^0.5.1",
-    "@hono/zod-openapi": "^0.19.2",
-    "@hono/zod-validator": "^0.4.3",
-    "@langchain/core": "^0.3.42",
-    "@langchain/google-genai": "^0.1.10",
-    "hono": "^3.12.0",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.4.1",
-    "bun-types": "latest"
-  }
+	"name": "maps_scraper",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"start": "bun src/main.js",
+		"dev": "bun --hot --watch src/main.js",
+		"lint": "biome lint .",
+		"format": "biome format . --write"
+	},
+	"dependencies": {
+		"@google/generative-ai": "^0.24.0",
+		"@hono/swagger-ui": "^0.5.1",
+		"@hono/zod-openapi": "^0.19.2",
+		"@hono/zod-validator": "^0.4.3",
+		"hono": "^3.12.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.4.1",
+		"bun-types": "latest"
+	}
 }
