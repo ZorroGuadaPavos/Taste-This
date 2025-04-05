@@ -6,7 +6,7 @@
  * @param {string} [sq=""] Search query for filtering reviews.
  * @returns {string} URL to fetch reviews.
  */
-export function listugcposts(placeId, so, pg = "", sq = "") {
+function listugcposts(placeId, so, pg = "", sq = "") {
 	if (!placeId) {
 		throw new Error("Place ID is required");
 	}
