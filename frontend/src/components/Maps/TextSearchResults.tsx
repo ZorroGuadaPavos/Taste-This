@@ -1,10 +1,9 @@
-import type { TextSearchPlace } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 interface TextSearchResultsProps {
-	places: TextSearchPlace[];
+	places: Place[];
 	onPlaceSelect: (place: Place) => void;
 }
 
@@ -16,17 +15,6 @@ export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsPr
 			</Box>
 		);
 	}
-
-	const handlePlaceSelect = (place: TextSearchPlace) => {
-		const selectedPlace: Place = {
-			id: place.id || "",
-			name: place.name || place.displayName || "",
-			displayName: place.displayName || "",
-			address: place.formattedAddress || "",
-			googleMapsUrl: place.googleMapsUrl,
-		};
-		onPlaceSelect(selectedPlace);
-	};
 
 	return (
 		<Box
@@ -50,7 +38,7 @@ export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsPr
 							width="100%"
 							py={3}
 							px={4}
-							onClick={() => handlePlaceSelect(place)}
+							onClick={() => onPlaceSelect(place)}
 							_hover={{
 								bg: "accent.matcha.light",
 								color: "accent.matcha.dark",
@@ -67,10 +55,10 @@ export function TextSearchResults({ places, onPlaceSelect }: TextSearchResultsPr
 								</Box>
 								<Box textAlign="left">
 									<Text fontWeight="500" color="fg.DEFAULT" fontSize="sm">
-										{place.displayName}
+										{place.name}
 									</Text>
 									<Text fontSize="xs" color="fg.muted" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-										{place.formattedAddress}
+										{place.address}
 									</Text>
 								</Box>
 							</Flex>

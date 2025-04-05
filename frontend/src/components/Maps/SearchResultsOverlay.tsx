@@ -1,10 +1,9 @@
-import type { TextSearchPlace } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
 import { Box } from "@chakra-ui/react";
 import { TextSearchResults } from "./TextSearchResults";
 
 interface SearchResultsOverlayProps {
-	places: TextSearchPlace[];
+	places: Place[];
 	onPlaceSelect: (place: Place) => void;
 	onClose: () => void;
 }

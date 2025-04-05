@@ -1,9 +1,9 @@
-import type { PlaceDetails } from "@/services/googleMapsService";
+import type { Place } from "@/types/Place";
 import { Box, Flex, HStack, Heading, Icon, Text, VStack } from "@chakra-ui/react";
 import { FiStar } from "react-icons/fi";
 
 interface PlaceDetailHeaderProps {
-	placeDetails: PlaceDetails;
+	place: Place;
 	open: boolean;
 	onToggle: () => void;
 }
@@ -43,8 +43,8 @@ const ToggleIndicator = ({ open }: { open: boolean }) => (
 	</Flex>
 );
 
-export function PlaceDetailHeader({ placeDetails, open, onToggle }: PlaceDetailHeaderProps) {
-	const { displayName, formattedAddress, rating } = placeDetails;
+export function PlaceDetailHeader({ place, open, onToggle }: PlaceDetailHeaderProps) {
+	const { name, address, rating } = place;
 
 	return (
 		<Box
@@ -57,14 +57,14 @@ export function PlaceDetailHeader({ placeDetails, open, onToggle }: PlaceDetailH
 			_hover={{ bg: "bg.50" }}
 			position="relative"
 		>
-			{rating && <RatingBadge rating={rating} />}
+			{rating !== null && <RatingBadge rating={rating} />}
 
 			<VStack align="flex-start" gap={1}>
 				<Heading size="lg" fontWeight="600" color="fg.DEFAULT">
-					{displayName}
+					{name}
 				</Heading>
 				<Text color="fg.muted" fontSize="sm">
-					{formattedAddress}
+					{address}
 				</Text>
 			</VStack>
 

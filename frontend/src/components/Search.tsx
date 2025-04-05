@@ -1,4 +1,4 @@
-import type { TextSearchPlace } from "@/services/googleMapsService";
+// import type { TextSearchPlace } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
 import { Box } from "@chakra-ui/react";
 import { SearchResultsOverlay } from "./Maps/SearchResultsOverlay";
@@ -9,7 +9,7 @@ interface SearchProps {
 	setRestaurant: (value: string) => void;
 	handleSearch: () => void;
 	isLoading: boolean;
-	textSearchResults: { places: TextSearchPlace[] } | null;
+	searchResults: Place[] | null;
 	onPlaceSelect: (place: Place) => void;
 	onClearResults: () => void;
 }
@@ -19,7 +19,7 @@ export function Search({
 	setRestaurant,
 	handleSearch,
 	isLoading,
-	textSearchResults,
+	searchResults,
 	onPlaceSelect,
 	onClearResults,
 }: SearchProps) {
@@ -31,12 +31,8 @@ export function Search({
 				handleSearch={handleSearch}
 				isLoading={isLoading}
 			/>
-			{textSearchResults?.places && textSearchResults.places.length > 0 && (
-				<SearchResultsOverlay
-					places={textSearchResults.places}
-					onPlaceSelect={onPlaceSelect}
-					onClose={onClearResults}
-				/>
+			{searchResults && searchResults.length > 0 && (
+				<SearchResultsOverlay places={searchResults} onPlaceSelect={onPlaceSelect} onClose={onClearResults} />
 			)}
 		</Box>
 	);

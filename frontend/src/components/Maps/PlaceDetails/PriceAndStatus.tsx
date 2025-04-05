@@ -2,23 +2,11 @@ import { Badge, Box, Grid, HStack, Icon, Text } from "@chakra-ui/react";
 import { FiClock } from "react-icons/fi";
 
 interface PriceAndStatusProps {
-	priceRange?: {
-		startPrice?: {
-			currencyCode?: string;
-			units?: string;
-			nanos?: number;
-		};
-		endPrice?: {
-			currencyCode?: string;
-			units?: string;
-			nanos?: number;
-		};
-	};
 	priceLevel?: string;
 	isOpenNow?: boolean;
 }
 
-export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndStatusProps) {
+export function PriceAndStatus({ priceLevel, isOpenNow }: PriceAndStatusProps) {
 	const formatOpenStatus = (isOpen?: boolean) => {
 		if (isOpen === undefined) return null;
 		return isOpen ? (
@@ -32,50 +20,8 @@ export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndSt
 		);
 	};
 
-	const formatPriceRange = (range?: PriceAndStatusProps["priceRange"], level?: string) => {
-		if (range?.startPrice) {
-			const getCurrencySymbol = (currencyCode?: string) => {
-				switch (currencyCode) {
-					case "USD":
-						return "$";
-					case "EUR":
-						return "€";
-					case "GBP":
-						return "£";
-					case "JPY":
-						return "¥";
-					default:
-						return currencyCode || "";
-				}
-			};
-
-			const formatPrice = (price: any) => {
-				if (!price) return "";
-				return price.units || "0";
-			};
-
-			const currencySymbol = getCurrencySymbol(range.startPrice.currencyCode);
-			const startPrice = formatPrice(range.startPrice);
-
-			if (!range.endPrice) {
-				return `${startPrice}+ ${currencySymbol}`;
-			}
-
-			const endPrice = formatPrice(range.endPrice);
-			return `${startPrice}-${endPrice} ${currencySymbol}`;
-		}
-
-		if (level !== undefined) {
-			if (typeof level === "string") {
-				if (level === "PRICE_LEVEL_UNSPECIFIED") {
-					return "Unknown";
-				}
-				const pricePart = level.replace("PRICE_LEVEL_", "");
-				return pricePart.charAt(0).toUpperCase() + pricePart.slice(1).toLowerCase();
-			}
-		}
-
-		return "Not available";
+	const formatPriceRange = (level?: string) => {
+		return level || "Not available";
 	};
 
 	return (
@@ -87,7 +33,7 @@ export function PriceAndStatus({ priceRange, priceLevel, isOpenNow }: PriceAndSt
 					</Text>
 					<HStack>
 						<Text fontWeight="600" color="fg.DEFAULT">
-							{formatPriceRange(priceRange, priceLevel)}
+							{formatPriceRange(priceLevel)}
 						</Text>
 					</HStack>
 				</Box>
