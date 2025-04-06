@@ -13,11 +13,11 @@
 		"@hono/swagger-ui": "^0.5.1",
 		"@hono/zod-openapi": "^0.19.2",
 		"@hono/zod-validator": "^0.4.3",
-		"hono": "^3.12.0",
+		"hono": "^4.7.5",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.4.1",
-		"bun-types": "latest"
+		"@biomejs/biome": "^1.9.4",
+		"bun-types": "^1.2.8"
 	}
 }
