@@ -19,6 +19,8 @@ const settings = {
 	AI_MODEL: process.env.AI_MODEL,
 
 	POPULAR_DISHES_PROMPT: process.env.POPULAR_DISHES_PROMPT,
+
+	RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
 };
 
 if (!settings.MAPS_API_KEY) {
@@ -35,6 +37,10 @@ if (!settings.POPULAR_DISHES_PROMPT) {
 
 if (!settings.AI_MODEL) {
 	console.warn("Warning: AI_MODEL is not set. Analysis will not work properly.");
+}
+
+if (!settings.RECAPTCHA_SECRET_KEY) {
+	console.warn("Warning: RECAPTCHA_SECRET_KEY is not set. Recaptcha will not work properly.");
 }
 
 export default settings;

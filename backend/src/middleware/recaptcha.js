@@ -1,10 +1,5 @@
-// backend/src/middleware/recaptcha.js
-
-// TODO: This schema import might need adjustment depending on actual location/exports
 import { ErrorResponseSchema } from "../api/restaurants/schemas.js";
-
-// --- reCAPTCHA Verification Logic ---
-const RECAPTCHA_SECRET_KEY = "6Ldc2gsrAAAAANDPpc2PFA6ZQlrq5NDB87ZnacV6"; // TODO: Replace with process.env.RECAPTCHA_SECRET_KEY in production!
+import settings from "../core/config.js";
 
 /**
  * Verifies a Google reCAPTCHA v3 token.
@@ -17,8 +12,6 @@ async function verifyRecaptcha(token, secret) {
 	const body = new URLSearchParams();
 	body.append("secret", secret);
 	body.append("response", token);
-	// Consider adding remoteip: body.append('remoteip', userIpAddress);
-
 	try {
 		const response = await fetch(verificationUrl, {
 			method: "POST",
@@ -30,12 +23,11 @@ async function verifyRecaptcha(token, secret) {
 
 		if (!response.ok) {
 			console.error(`reCAPTCHA verification request failed: ${response.status} ${response.statusText}`);
-			// Return a structure indicating failure for the middleware to handle
 			return { success: false, "error-codes": ["recaptcha-request-failed"] };
 		}
 
 		const data = await response.json();
-		return data; // e.g., { success: true, score: 0.9, action: '...', ... }
+		return data;
 	} catch (error) {
 		console.error("Error calling reCAPTCHA verify endpoint:", error);
 		return { success: false, "error-codes": ["recaptcha-internal-error"] };
@@ -58,24 +50,11 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 					success: false,
 					error: "reCAPTCHA token missing",
 				}),
-				400, // Bad Request
+				400,
 			);
 		}
-
-		const secret = RECAPTCHA_SECRET_KEY; // Use the key defined above
-		if (!secret) {
-			console.error("reCAPTCHA middleware: Secret key is not configured.");
-			return c.json(
-				ErrorResponseSchema.parse({
-					success: false,
-					error: "Server configuration error (reCAPTCHA)",
-				}),
-				500, // Internal Server Error
-			);
-		}
-
 		try {
-			const verificationResult = await verifyRecaptcha(token, secret);
+			const verificationResult = await verifyRecaptcha(token, settings.RECAPTCHA_SECRET_KEY);
 
 			if (!verificationResult.success) {
 				console.warn("reCAPTCHA verification failed:", verificationResult["error-codes"]);
@@ -83,9 +62,8 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 					ErrorResponseSchema.parse({
 						success: false,
 						error: "reCAPTCHA verification failed",
-						// Optionally include details: details: verificationResult['error-codes']
 					}),
-					403, // Forbidden
+					403,
 				);
 			}
 
@@ -96,7 +74,7 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 						success: false,
 						error: "reCAPTCHA action mismatch",
 					}),
-					400, // Bad Request
+					400,
 				);
 			}
 
@@ -109,15 +87,13 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 						success: false,
 						error: "Request potentially automated, verification score too low.",
 					}),
-					403, // Forbidden
+					403,
 				);
 			}
 
-			// Verification successful
 			console.log(`reCAPTCHA success for action '${expectedAction}', score: ${verificationResult.score}`);
 			await next();
 		} catch (error) {
-			// This catch is for unexpected errors within the middleware itself
 			console.error("Internal error during reCAPTCHA middleware processing:", error);
 			return c.json(
 				ErrorResponseSchema.parse({

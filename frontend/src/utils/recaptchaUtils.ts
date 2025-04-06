@@ -14,10 +14,10 @@ export const getRecaptchaToken = (action: string): Promise<string> => {
 
 		window.grecaptcha.ready(() => {
 			try {
-				// IMPORTANT: Replace 'YOUR_SITE_KEY' with your actual site key
-				const siteKey = "6Ldc2gsrAAAAACZ9z7araIQHHyhy2REPNT6bbOjF"; // Use the key provided
+				const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
 				if (!siteKey) {
-					console.error("VITE_RECAPTCHA_SITE_KEY is not defined.");
+					console.error("VITE_RECAPTCHA_SITE_KEY is not defined in .env.local (or other .env file).");
 					reject(new Error("reCAPTCHA Site Key is missing."));
 					return;
 				}
@@ -39,7 +39,6 @@ export const getRecaptchaToken = (action: string): Promise<string> => {
 	});
 };
 
-// Add type definition for grecaptcha if it doesn't exist globally
 declare global {
 	interface Window {
 		grecaptcha: {
