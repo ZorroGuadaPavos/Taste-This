@@ -33,6 +33,9 @@ export async function fetchReviews(placeId, sort, nextPage = "", search_query = 
 		}
 		const textData = await response.text();
 		const rawData = textData.split(")]}'")[1];
+		if (!rawData) {
+			throw new Error("Failed to parse review data: Invalid format.");
+		}
 		return JSON.parse(rawData);
 	} catch (error) {
 		throw new Error(`Failed to fetch reviews: ${error.message}`);

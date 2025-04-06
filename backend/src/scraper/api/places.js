@@ -108,7 +108,7 @@ export async function getFeatureID(placeId) {
 		throw new Error("Place ID is required to get Feature ID.");
 	}
 	try {
-		const response = await fetch(`https://google.com/maps/place/?q=place_id:${placeId}`);
+		const response = await fetch(`https://www.google.com/maps/place/?q=place_id:${placeId}`);
 		if (!response.ok) {
 			throw new Error(
 				`Failed to fetch feature ID page for place ID ${placeId}: ${response.status} ${response.statusText}`,
