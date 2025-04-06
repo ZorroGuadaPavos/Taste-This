@@ -6,8 +6,7 @@ import {
 	RestaurantsResponseSchema,
 } from "./schemas.js";
 
-// Define the header schema once
-const RecaptchaHeaderSchema = z.object({
+export const RecaptchaHeaderSchema = z.object({
 	"X-Recaptcha-Token": z.string().openapi({
 		param: { name: "X-Recaptcha-Token", in: "header" },
 		example: "03AGdBq27...",

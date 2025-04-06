@@ -1,13 +1,18 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { zValidator } from "@hono/zod-validator";
 import { GeminiModel } from "../../ai-providers/gemini/provider.js";
 
 import settings from "../../core/config.js";
 
-// Import the middleware
 import { createRecaptchaMiddleware } from "../../middleware/recaptcha.js";
 
-import { restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
-import { DishesResponseSchema, ErrorResponseSchema, RestaurantsResponseSchema } from "./schemas.js";
+import { RecaptchaHeaderSchema, restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
+import {
+	DishesResponseSchema,
+	ErrorResponseSchema,
+	RestaurantIdRequestSchema,
+	RestaurantsResponseSchema,
+} from "./schemas.js";
 import { analyzePopularDishes, fetchRestaurantReviews, fetchRestaurants } from "./service.js";
 
 const RestaurantRouter = new OpenAPIHono();
@@ -19,84 +24,90 @@ RestaurantRouter.use("*", async (c, next) => {
 	await next();
 });
 
-RestaurantRouter.openapi(
-	restaurantEndpointDefinition,
-	createRecaptchaMiddleware("search_restaurants"), // Use imported middleware
-	async (c) => {
-		const { query } = c.req.valid("query");
+RestaurantRouter.use(
+	"/",
+	zValidator("query", RestaurantIdRequestSchema),
+	zValidator("header", RecaptchaHeaderSchema),
+	createRecaptchaMiddleware("search_restaurants"),
+);
 
-		try {
-			const restaurantData = await fetchRestaurants(query);
+RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
+	const { query } = c.req.valid("query");
 
-			if (!restaurantData.success) {
-				return c.json(
-					ErrorResponseSchema.parse({
-						success: false,
-						error: restaurantData.error,
-					}),
-					400,
-				);
-			}
+	try {
+		const restaurantData = await fetchRestaurants(query);
 
-			return c.json(RestaurantsResponseSchema.parse(restaurantData), 200);
-		} catch (error) {
-			console.log(error);
+		if (!restaurantData.success) {
 			return c.json(
 				ErrorResponseSchema.parse({
 					success: false,
-					query,
-					error: error.message,
+					error: restaurantData.error,
 				}),
-				error.status || 500,
+				400,
 			);
 		}
-	},
+
+		return c.json(RestaurantsResponseSchema.parse(restaurantData), 200);
+	} catch (error) {
+		console.log(error);
+		return c.json(
+			ErrorResponseSchema.parse({
+				success: false,
+				query,
+				error: error.message,
+			}),
+			error.status || 500,
+		);
+	}
+});
+
+RestaurantRouter.use(
+	"/dishes",
+	zValidator("query", RestaurantIdRequestSchema),
+	zValidator("header", RecaptchaHeaderSchema),
+	createRecaptchaMiddleware("select_restaurant"),
 );
 
-RestaurantRouter.openapi(
-	restaurantDishesEndpointDefinition,
-	createRecaptchaMiddleware("select_restaurant"), // Use imported middleware
-	async (c) => {
-		const { query } = c.req.valid("query");
-		const geminiModel = c.get("geminiModel");
+RestaurantRouter.openapi(restaurantDishesEndpointDefinition, async (c) => {
+	const { query } = c.req.valid("query");
+	const geminiModel = c.get("geminiModel");
 
-		try {
-			const reviewsData = await fetchRestaurantReviews(query);
+	try {
+		const reviewsData = await fetchRestaurantReviews(query);
 
-			if (!reviewsData || !Array.isArray(reviewsData.reviews) || reviewsData.reviews.length === 0) {
-				return c.json(
-					DishesResponseSchema.parse({
-						success: true,
-						totalReviewsAnalyzed: 0,
-						popularDishes: [],
-					}),
-					200,
-				);
-			}
-
-			const filteredReviews = reviewsData.reviews.map(({ review_id, review_text }) => ({ review_id, review_text }));
-			const analysisResult = await analyzePopularDishes(filteredReviews, geminiModel);
-			const popularDishes = analysisResult?.popularDishes || [];
-
+		if (!reviewsData || !Array.isArray(reviewsData.reviews) || reviewsData.reviews.length === 0) {
 			return c.json(
 				DishesResponseSchema.parse({
 					success: true,
-					totalReviewsAnalyzed: reviewsData.totalReviewsAnalyzed,
-					popularDishes: popularDishes,
+					totalReviewsAnalyzed: 0,
+					popularDishes: [],
 				}),
 				200,
 			);
-		} catch (error) {
-			console.error("Error in /dishes endpoint:", error);
-			return c.json(
-				ErrorResponseSchema.parse({
-					success: false,
-					error: "An internal error occurred while analyzing dishes.",
-				}),
-				error.status || 500,
-			);
 		}
-	},
-);
+
+		const filteredReviews = reviewsData.reviews.map(({ review_id, review_text }) => ({ review_id, review_text }));
+		const analysisResult = await analyzePopularDishes(filteredReviews, geminiModel);
+		const popularDishes = analysisResult?.popularDishes || [];
+
+		return c.json(
+			DishesResponseSchema.parse({
+				success: true,
+				totalReviewsAnalyzed: reviewsData.totalReviewsAnalyzed,
+				popularDishes: popularDishes,
+			}),
+			200,
+		);
+	} catch (error) {
+		console.error("Error in /dishes endpoint:", error);
+		return c.json(
+			ErrorResponseSchema.parse({
+				success: false,
+				error: "An internal error occurred while analyzing dishes.",
+			}),
+			error.status || 500,
+		);
+	}
+});
 
 export default RestaurantRouter;
