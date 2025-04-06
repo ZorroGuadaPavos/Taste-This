@@ -4,8 +4,8 @@ import { GeminiModel } from "../../ai-providers/gemini/provider.js";
 import settings from "../../core/config.js";
 
 import { restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
-import { DishesResponseSchema, ErrorResponseSchema, RestaurantInfoResponseSchema } from "./schemas.js";
-import { analyzePopularDishes, fetchRestaurantInfo, fetchRestaurantReviews } from "./service.js";
+import { DishesResponseSchema, ErrorResponseSchema, RestaurantsResponseSchema } from "./schemas.js";
+import { analyzePopularDishes, fetchRestaurantReviews, fetchRestaurants } from "./service.js";
 
 const RestaurantRouter = new OpenAPIHono();
 
@@ -20,16 +20,19 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 	const { query } = c.req.valid("query");
 
 	try {
-		const restaurantData = await fetchRestaurantInfo(query);
-		return c.json(
-			RestaurantInfoResponseSchema.parse({
-				success: true,
-				placeUrlId: restaurantData.placeUrlId,
-				placePhoto: restaurantData.placePhoto,
-				reviewPhotos: restaurantData.reviewPhotos,
-			}),
-			200,
-		);
+		const restaurantData = await fetchRestaurants(query);
+
+		if (!restaurantData.success) {
+			return c.json(
+				ErrorResponseSchema.parse({
+					success: false,
+					error: restaurantData.error,
+				}),
+				400,
+			);
+		}
+
+		return c.json(RestaurantsResponseSchema.parse(restaurantData), 200);
 	} catch (error) {
 		console.log(error);
 		return c.json(
@@ -49,25 +52,40 @@ RestaurantRouter.openapi(restaurantDishesEndpointDefinition, async (c) => {
 
 	try {
 		const reviewsData = await fetchRestaurantReviews(query);
-		const filteredReviews = reviewsData.reviews.map(({ review_id, review }) => ({ review_id, review }));
+
+		if (!reviewsData || !Array.isArray(reviewsData.reviews) || reviewsData.reviews.length === 0) {
+			return c.json(
+				DishesResponseSchema.parse({
+					success: true,
+					totalReviewsAnalyzed: 0,
+					popularDishes: [],
+				}),
+				200,
+			);
+		}
+
+		const filteredReviews = reviewsData.reviews.map(({ review_id, review_text }) => ({ review_id, review_text }));
 		const analysisResult = await analyzePopularDishes(filteredReviews, geminiModel);
+		const popularDishes = analysisResult?.popularDishes || [];
+
 		return c.json(
 			DishesResponseSchema.parse({
 				success: true,
 				totalReviewsAnalyzed: reviewsData.totalReviewsAnalyzed,
-				popularDishes: analysisResult.popularDishes,
+				popularDishes: popularDishes,
 			}),
 			200,
 		);
 	} catch (error) {
-		console.log(error);
+		console.error("Error in /dishes endpoint:", error);
 		return c.json(
 			ErrorResponseSchema.parse({
 				success: false,
-				error: error.message,
+				error: "An internal error occurred while analyzing dishes.",
 			}),
 			error.status || 500,
 		);
 	}
 });
+
 export default RestaurantRouter;

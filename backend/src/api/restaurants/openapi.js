@@ -3,29 +3,29 @@ import {
 	DishesResponseSchema,
 	ErrorResponseSchema,
 	RestaurantIdRequestSchema,
-	RestaurantInfoResponseSchema,
+	RestaurantsResponseSchema,
 } from "./schemas.js";
 
 export const restaurantEndpointDefinition = createRoute({
 	method: "get",
 	path: "/",
 	tags: ["restaurants"],
-	summary: "Get place URL from query",
-	description: "Returns the Google Maps URL for a place based on the query",
+	summary: "Get restaurants matching query",
+	description: "Returns a list of restaurants matching the search query",
 	request: {
 		query: RestaurantIdRequestSchema,
 	},
 	responses: {
 		200: {
-			description: "Place URL found successfully",
+			description: "Restaurants found successfully",
 			content: {
 				"application/json": {
-					schema: RestaurantInfoResponseSchema,
+					schema: RestaurantsResponseSchema,
 				},
 			},
 		},
 		400: {
-			description: "Bad request or URL not found",
+			description: "Bad request or no restaurants found",
 			content: {
 				"application/json": {
 					schema: ErrorResponseSchema,

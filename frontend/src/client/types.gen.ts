@@ -9,9 +9,21 @@ export type GetRestaurantsData = {
 
 export type GetRestaurantsResponse = ({
     success: boolean;
-    placeUrlId: string;
-    placePhoto: (string) | null;
-    reviewPhotos?: Array<(string)>;
+    restaurants: Array<{
+        id: (string) | null;
+        name: (string) | null;
+        rating: (number) | null;
+        reviewCount: (number) | null;
+        categories: Array<(string)> | null;
+        address: (string) | null;
+        priceLevel: (string) | null;
+        openNow: boolean;
+        phone: (string) | null;
+        website: (string) | null;
+        photos: Array<(string)>;
+        accessibility: Array<(string)> | null;
+    }>;
+    error?: string;
 });
 
 export type GetRestaurantsDishesData = {

@@ -13,11 +13,17 @@ const settings = {
 	BACKEND_CORS_ORIGINS: parseCors(process.env.BACKEND_CORS_ORIGINS || []),
 	PORT: process.env.PORT || 3000,
 
+	MAPS_API_KEY: process.env.MAPS_API_KEY,
+
 	AI_API_KEY: process.env.AI_API_KEY,
 	AI_MODEL: process.env.AI_MODEL,
 
 	POPULAR_DISHES_PROMPT: process.env.POPULAR_DISHES_PROMPT,
 };
+
+if (!settings.MAPS_API_KEY) {
+	console.warn("Warning: MAPS_API_KEY is not set.");
+}
 
 if (!settings.AI_API_KEY) {
 	console.warn("Warning: AI_API_KEY is not set. Analysis will not work.");
