@@ -41,7 +41,13 @@ async function verifyRecaptcha(token, secret) {
  */
 export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) => {
 	return async (c, next) => {
-		const token = c.req.header("X-Recaptcha-Token"); // Ensure frontend sends this header
+		if (!settings.RECAPTCHA_ENABLED) {
+			console.warn("reCAPTCHA verification is disabled via RECAPTCHA_ENABLED=false in config/env");
+			await next();
+			return;
+		}
+
+		const token = c.req.header("X-Recaptcha-Token");
 
 		if (!token) {
 			console.warn("reCAPTCHA middleware: Token missing");
@@ -53,8 +59,21 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 				400,
 			);
 		}
+
+		const secret = settings.RECAPTCHA_SECRET_KEY;
+		if (!secret) {
+			console.error("reCAPTCHA middleware: Secret key is not configured (RECAPTCHA_SECRET_KEY missing).");
+			return c.json(
+				ErrorResponseSchema.parse({
+					success: false,
+					error: "Server configuration error (reCAPTCHA)",
+				}),
+				500,
+			);
+		}
+
 		try {
-			const verificationResult = await verifyRecaptcha(token, settings.RECAPTCHA_SECRET_KEY);
+			const verificationResult = await verifyRecaptcha(token, secret);
 
 			if (!verificationResult.success) {
 				console.warn("reCAPTCHA verification failed:", verificationResult["error-codes"]);
@@ -91,7 +110,6 @@ export const createRecaptchaMiddleware = (expectedAction, scoreThreshold = 0.5) 
 				);
 			}
 
-			console.log(`reCAPTCHA success for action '${expectedAction}', score: ${verificationResult.score}`);
 			await next();
 		} catch (error) {
 			console.error("Internal error during reCAPTCHA middleware processing:", error);
