@@ -1,5 +1,6 @@
 import type { GetRestaurantsDishesResponse } from "@/client";
 import { RestaurantsService } from "@/client";
+import { getRecaptchaToken } from "@/utils/recaptchaUtils";
 import { useCallback, useState } from "react";
 
 export const useRestaurantData = () => {
@@ -14,23 +15,32 @@ export const useRestaurantData = () => {
 		setIsLoading(true);
 		setRecommendations(null);
 		setErrorMessage(null);
+		setErrorType("error");
 
 		try {
-			const dishesResult = await RestaurantsService.getRestaurantsDishes({ query: placeId });
+			const recaptchaToken = await getRecaptchaToken("select_restaurant");
+
+			const dishesResult = await RestaurantsService.getRestaurantsDishes({
+				query: placeId,
+				xRecaptchaToken: recaptchaToken,
+			});
 
 			if (dishesResult.success && dishesResult.popularDishes) {
 				setRecommendations(dishesResult);
 			} else {
 				const backendError = (dishesResult as any).error;
-				setErrorType("error");
 				setErrorMessage(backendError || "Failed to retrieve dishes or no dishes found.");
 				setRecommendations(null);
 			}
 		} catch (error: any) {
-			console.error("Error fetching restaurant dishes:", error);
-			setErrorType("error");
-			const apiErrorMessage = error?.body?.message || error?.message;
-			setErrorMessage(apiErrorMessage || "An unexpected error occurred while fetching dishes.");
+			if (error.message?.includes("reCAPTCHA")) {
+				setErrorMessage("Could not verify request. Please try again.");
+			} else {
+				console.error("Error fetching restaurant dishes:", error);
+				const apiErrorMessage = error?.body?.message || error?.message;
+				setErrorMessage(apiErrorMessage || "An unexpected error occurred while fetching dishes.");
+			}
+			setRecommendations(null);
 		} finally {
 			setIsLoading(false);
 		}
