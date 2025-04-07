@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import posthog from "posthog-js";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { OpenAPI } from "./client";
@@ -13,6 +14,12 @@ import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/500.css";
 import "@fontsource/quicksand/600.css";
 import "@fontsource/quicksand/700.css";
+
+if (import.meta.env.PROD && import.meta.env.VITE_PUBLIC_POSTHOG_KEY && import.meta.env.VITE_PUBLIC_POSTHOG_HOST) {
+	posthog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
+		api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
+	});
+}
 
 OpenAPI.BASE = import.meta.env.VITE_API_URL;
 

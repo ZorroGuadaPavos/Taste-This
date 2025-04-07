@@ -21,6 +21,7 @@
 		"@tanstack/router-vite-plugin": "^1.102.1",
 		"@vitejs/plugin-react-swc": "^3.8.0",
 		"axios": "^1.7.9",
+		"posthog-js": "^1.234.9",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-hook-form": "^7.54.2",
