@@ -20,8 +20,8 @@ export function PriceAndStatus({ priceLevel, isOpenNow }: PriceAndStatusProps) {
 		);
 	};
 
-	const formatPriceRange = (level?: string) => {
-		return level || "Not available";
+	const formatPriceRange = (level = "Not available") => {
+		return level;
 	};
 
 	return (
