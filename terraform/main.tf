@@ -7,7 +7,6 @@ terraform {
   }
 }
 
-# Define local variables for resource naming
 locals {
   name_prefix = "${var.company_name}-${var.project_name}-${terraform.workspace}"
   function_name = "${local.name_prefix}-function"
@@ -90,6 +89,9 @@ module "lambda_function" {
   architectures = ["x86_64"]
   image_uri     = module.docker_build.image_uri
 
+  # Increase timeout for potentially long AI calls
+  timeout = 10
+
   # Add CloudWatch Logs permissions
   attach_policy_json = true
   policy_json = jsonencode({
@@ -126,7 +128,6 @@ module "lambda_function" {
   tags = local.common_tags
 }
 
-# Create API Gateway
 module "apigateway" {
   source  = "terraform-aws-modules/apigateway-v2/aws"
   version = "~> 1.1"
@@ -145,7 +146,6 @@ module "apigateway" {
   tags = local.common_tags
 }
 
-# Add explicit permission for API Gateway to invoke Lambda
 resource "aws_lambda_permission" "api_gateway" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"

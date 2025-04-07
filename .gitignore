@@ -1,4 +1,2 @@
-backend/output/*.json
-NOTES.md
-frontend/.env
-backend/.env
+backend/output/*
+resources/*

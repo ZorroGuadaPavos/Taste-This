@@ -102,6 +102,37 @@ pnpm run dev
 
 5. The application will be available at `http://localhost:5173`
 
+## Local Docker Execution & Deployment
+
+### Running Backend Locally with Docker
+
+These commands allow you to build and run the backend service within a Docker container, simulating the production environment more closely. Ensure you have a `.env` file configured in the `backend` directory.
+
+1.  **Build the Docker image:**
+    ```bash
+    docker build -t taste-this-bun-local backend
+    ```
+
+2.  **Run the Docker container:**
+    ```bash
+    docker run --rm -p 3000:3000 --env-file backend/.env taste-this-bun-local bun src/main.js
+    ```
+    *   This command uses `bun src/main.js` as the entry point, which is suitable for local development/testing using the container but differs from the production entry point used in AWS Lambda (`bootstrap`).
+
+### Deploying with Terraform
+
+These commands manage the AWS infrastructure using Terraform.
+
+1.  **Plan the changes:**
+    ```bash
+    terraform plan -var-file="secret.tfvars" -out=tfplan
+    ```
+
+2.  **Apply the changes:**
+    ```bash
+    terraform apply tfplan
+    ```
+
 ## Contributing
 1. Fork the repository
 2. Create a new branch for your feature
@@ -111,4 +142,3 @@ pnpm run dev
 
 ## Acknowledgements
 - [YasogaN/google-maps-review-scrape](https://github.com/YasogaN/google-maps-review-scraper) - Used as scraper implementation in this project.
-
