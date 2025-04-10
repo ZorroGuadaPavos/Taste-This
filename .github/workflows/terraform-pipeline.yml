@@ -18,23 +18,23 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      MAPS_API_KEY_GITHUB:
+      MAPS_API_KEY:
         required: true
-      AI_API_KEY_GITHUB:
+      AI_API_KEY:
         required: true
-      RECAPTCHA_SECRET_KEY_GITHUB:
+      RECAPTCHA_SECRET_KEY:
         required: true  
 
 jobs:
   terraform:
     env:
-      TF_VAR_maps_api_key: ${{ secrets.MAPS_API_KEY_GITHUB }}
-      TF_VAR_ai_api_key: ${{ secrets.AI_API_KEY_GITHUB }}
-      TF_VAR_recaptcha_secret_key: ${{ secrets.RECAPTCHA_SECRET_KEY_GITHUB }}
-      TF_VAR_ai_model: ${{ vars.AI_MODEL_GITHUB }}
-      TF_VAR_backend_cors_origins: ${{ vars.BACKEND_CORS_ORIGINS_GITHUB }}
-      TF_VAR_popular_dishes_prompt: ${{ vars.POPULAR_DISHES_PROMPT_GITHUB }}
-      TF_VAR_recaptcha_enabled: ${{ vars.RECAPTCHA_ENABLED_GITHUB }}
+      TF_VAR_maps_api_key: ${{ secrets.MAPS_API_KEY }}
+      TF_VAR_ai_api_key: ${{ secrets.AI_API_KEY }}
+      TF_VAR_recaptcha_secret_key: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      TF_VAR_ai_model: ${{ vars.AI_MODEL }}
+      TF_VAR_backend_cors_origins: ${{ vars.BACKEND_CORS_ORIGINS }}
+      TF_VAR_popular_dishes_prompt: ${{ vars.POPULAR_DISHES_PROMPT }}
+      TF_VAR_recaptcha_enabled: ${{ vars.RECAPTCHA_ENABLED }}
 
     runs-on: ubuntu-latest
     steps:
