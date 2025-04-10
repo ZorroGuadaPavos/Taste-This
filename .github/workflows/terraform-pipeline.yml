@@ -1,0 +1,89 @@
+name: Terraform Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      destroy:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      MAPS_API_KEY_GITHUB:
+        required: true
+      AI_API_KEY_GITHUB:
+        required: true
+      RECAPTCHA_SECRET_KEY_GITHUB:
+        required: true  
+
+jobs:
+  terraform:
+    env:
+      TF_VAR_maps_api_key: ${{ secrets.MAPS_API_KEY_GITHUB }}
+      TF_VAR_ai_api_key: ${{ secrets.AI_API_KEY_GITHUB }}
+      TF_VAR_recaptcha_secret_key: ${{ secrets.RECAPTCHA_SECRET_KEY_GITHUB }}
+      TF_VAR_ai_model: ${{ vars.AI_MODEL_GITHUB }}
+      TF_VAR_backend_cors_origins: ${{ vars.BACKEND_CORS_ORIGINS_GITHUB }}
+      TF_VAR_popular_dishes_prompt: ${{ vars.POPULAR_DISHES_PROMPT_GITHUB }}
+      TF_VAR_recaptcha_enabled: ${{ vars.RECAPTCHA_ENABLED_GITHUB }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Get AWS Region from config
+        id: get_region
+        run: |
+          REGION=$(grep -oP 'region\s*=\s*"\K[^"]+' terraform/config/backend.config)
+          echo "region=$REGION" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ steps.get_region.outputs.region }}
+
+      - name: Terraform Init
+        run: terraform init -backend-config="./config/backend.config"
+        working-directory: ./terraform
+
+      - name: Select Workspace
+        run: terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          if [[ "${{ inputs.destroy }}" == "true" ]]; then
+            terraform plan -destroy -no-color
+          else
+            terraform plan -no-color
+          fi
+        working-directory: ./terraform
+        continue-on-error: true
+
+      - name: Terraform Apply
+        if: steps.plan.outcome == 'success' && inputs.destroy != true
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
+
+      - name: Terraform Destroy
+        if: steps.plan.outcome == 'success' && inputs.destroy == true
+        run: terraform destroy -auto-approve
+        working-directory: ./terraform

@@ -1,0 +1,28 @@
+name: Deploy App Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy from'
+        required: true
+        default: 'main'
+        type: string
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - prd
+          - dev
+
+jobs:
+  deploy_dev:
+    name: Deploy dev
+    uses: ./.github/workflows/terraform-pipeline.yml
+    secrets: inherit
+    with:
+      branch: ${{ github.event.inputs.branch }}
+      environment: ${{ github.event.inputs.environment }}
+      destroy: false

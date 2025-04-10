@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = "dijkwater-core-terraform-state"
-    key            = "tastethis/terraform.tfstate"
-    region         = "eu-west-3"
+    bucket         = ""
+    key            = ""
+    region         = ""
     use_lockfile   = true
   }
 }
@@ -88,7 +88,7 @@ module "lambda_function" {
   package_type  = "Image"
   architectures = ["x86_64"]
   image_uri     = module.docker_build.image_uri
-
+  
   # Increase timeout for potentially long AI calls
   timeout = 10
 
@@ -122,7 +122,7 @@ module "lambda_function" {
     AI_MODEL                = var.ai_model
     POPULAR_DISHES_PROMPT   = var.popular_dishes_prompt
     RECAPTCHA_SECRET_KEY    = var.recaptcha_secret_key
-    RECAPTCHA_ENABLED       = var.recaptcha_enabled
+    RECAPTCHA_ENABLED       = var.recaptcha_enabled    
   }
   
   tags = local.common_tags

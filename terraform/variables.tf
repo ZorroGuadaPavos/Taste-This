@@ -16,7 +16,6 @@ variable "company_name" {
   default     = "dijkwater"
 }
 
-
 variable "source_path" {
   description = "Path to the Lambda function source code"
   type        = string
@@ -61,6 +60,24 @@ variable "backend_cors_origins" {
   default     = "[]"
 }
 
+variable "ai_model" {
+  description = "Generative AI model name"
+  type        = string
+  default     = "gemini-2.0-flash-lite"
+}
+
+variable "popular_dishes_prompt" {
+  description = "Prompt for the AI to identify popular dishes"
+  type        = string
+}
+
+variable "recaptcha_enabled" {
+  description = "Whether reCAPTCHA is enabled"
+  type        = bool
+  default     = true
+}
+
+# Secrets
 variable "maps_api_key" {
   description = "Google Maps API Key"
   type        = string
@@ -73,25 +90,9 @@ variable "ai_api_key" {
   sensitive   = true
 }
 
-variable "ai_model" {
-  description = "Generative AI model name"
-  type        = string
-  default     = "gemini-2.0-flash-lite"
-}
-
-variable "popular_dishes_prompt" {
-  description = "Prompt for the AI to identify popular dishes"
-  type        = string
-}
-
 variable "recaptcha_secret_key" {
   description = "reCAPTCHA secret key"
   type        = string
   sensitive   = true
 }
 
-variable "recaptcha_enabled" {
-  description = "Whether reCAPTCHA is enabled"
-  type        = bool
-  default     = true
-}

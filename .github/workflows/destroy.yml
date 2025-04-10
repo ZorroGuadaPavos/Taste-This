@@ -1,0 +1,28 @@
+name: Destroy App
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to destroy'
+        required: true
+        default: 'main'
+        type: string
+      environment:
+        description: 'Environment to destroy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - prd
+          - dev
+
+jobs:
+  destroy:
+    name: Destroy environment
+    uses: ./.github/workflows/terraform-pipeline.yml
+    secrets: inherit
+    with:
+      branch: ${{ github.event.inputs.branch }}
+      environment: ${{ github.event.inputs.environment }}
+      destroy: true

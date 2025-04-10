@@ -1,0 +1,20 @@
+name: Deploy App DEV
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'app/**'
+      - 'terraform/**'
+      - '.github/**'
+
+jobs:
+  deploy_dev:
+    name: Deploy dev
+    uses: ./.github/workflows/terraform-pipeline.yml
+    secrets: inherit
+    with:
+      branch: ${{ github.ref }}
+      environment: 'dev'
+      destroy: false
