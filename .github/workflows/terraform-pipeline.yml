@@ -34,7 +34,7 @@ jobs:
       TF_VAR_ai_model: ${{ vars.AI_MODEL }}
       TF_VAR_backend_cors_origins: ${{ vars.BACKEND_CORS_ORIGINS }}
       TF_VAR_popular_dishes_prompt: ${{ vars.POPULAR_DISHES_PROMPT }}
-      TF_VAR_recaptcha_enabled: ${{ vars.RECAPTCHA_ENABLED }}
+      TF_VAR_recaptcha_enabled: ${{ vars.RECAPTCHA_ENABLED || 'true' }}
 
     runs-on: ubuntu-latest
     steps:
