@@ -1,4 +1,4 @@
-import { Box, Button, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import posthog from "posthog-js";
 import { useEffect, useState } from "react";
 
@@ -75,21 +75,26 @@ export const AnalyticsConsent = () => {
 				<Text fontSize="sm" mr={4}>
 					We use analytics cookies to understand how you use our service and to make improvements.
 				</Text>
-				<Box>
+				<Flex gap={2} direction={{ base: "column", md: "row" }}>
 					<Button
 						size="sm"
 						bg="cookie.decline"
 						color="gray.700"
 						onClick={handleDecline}
-						mr={2}
 						_hover={{ bg: "gray.300" }}
 					>
 						Decline
 					</Button>
-					<Button size="sm" bg="cookie.accept" color="white" onClick={handleAccept} _hover={{ opacity: 0.9 }}>
+					<Button
+						size="sm"
+						bg="cookie.accept"
+						color="white"
+						onClick={handleAccept}
+						_hover={{ opacity: 0.9 }}
+					>
 						Accept
 					</Button>
-				</Box>
+				</Flex>
 			</Box>
 		</Box>
 	);
