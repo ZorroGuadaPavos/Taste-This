@@ -18,8 +18,8 @@ export const PlaceDetailsCard = memo(({ place }: PlaceDetailsCardProps) => {
 		return null;
 	}
 
-	const photos = place.photos || [];
-	const mainPhotoUrl = photos[selectedPhotoIndex] || photos[0];
+	const [firstPhoto] = place.photos || [];
+	const mainPhotoUrl = place.photos[selectedPhotoIndex] || firstPhoto;
 
 	const open = disclosure.open;
 
@@ -48,7 +48,7 @@ export const PlaceDetailsCard = memo(({ place }: PlaceDetailsCardProps) => {
 							justify="center"
 							height={{ base: "12rem", md: "100%" }}
 						>
-							<MainPlacePhoto placeName={place.name} imageUrl={photos[0]} />
+							<MainPlacePhoto placeName={place.name} imageUrl={firstPhoto} />
 						</Flex>
 						<Flex flex={{ base: "auto", md: 1 }} overflow="visible" height="100%">
 							<PlaceDetailsContent place={place} open={open} />
@@ -60,10 +60,10 @@ export const PlaceDetailsCard = memo(({ place }: PlaceDetailsCardProps) => {
 							<Box flex="1" minHeight="0">
 								<MainPlacePhoto placeName={place.name} imageUrl={mainPhotoUrl} />
 							</Box>
-							{photos.length > 1 && (
+							{place.photos.length > 1 && (
 								<Box height="4rem">
 									<PhotoThumbnails
-										photos={photos}
+										photos={place.photos}
 										placeName={place.name}
 										selectedPhotoIndex={selectedPhotoIndex}
 										onPhotoSelect={setSelectedPhotoIndex}

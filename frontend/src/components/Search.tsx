@@ -1,4 +1,3 @@
-// import type { TextSearchPlace } from "@/services/googleMapsService";
 import type { Place } from "@/types/Place";
 import { Box } from "@chakra-ui/react";
 import { SearchResultsOverlay } from "./Maps/SearchResultsOverlay";

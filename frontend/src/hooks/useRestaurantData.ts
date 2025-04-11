@@ -48,7 +48,6 @@ export const useRestaurantData = () => {
 
 	return {
 		recommendations,
-		// photos,
 		isLoading,
 		errorMessage,
 		errorType,
