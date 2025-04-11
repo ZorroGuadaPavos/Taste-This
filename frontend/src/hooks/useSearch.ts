@@ -1,41 +1,69 @@
-import type { TextSearchResponse } from "@/services/googleMapsService";
-import { searchPlacesByText } from "@/services/googleMapsService";
+import { type GetRestaurantsResponse, RestaurantsService } from "@/client";
+import type { Place } from "@/types/Place";
 import { useCallback, useState } from "react";
 
+const transformBackendRestaurantToPlace = (restaurant: GetRestaurantsResponse["restaurants"][number]): Place | null => {
+	if (!restaurant.id || !restaurant.name || !restaurant.address) {
+		console.warn("Skipping restaurant with missing id, name, or address:", restaurant);
+		return null;
+	}
+	return {
+		id: restaurant.id,
+		name: restaurant.name,
+		address: restaurant.address,
+		rating: restaurant.rating ?? null,
+		reviewCount: restaurant.reviewCount ?? null,
+		categories: restaurant.categories ?? null,
+		priceLevel: restaurant.priceLevel ?? null,
+		openNow: restaurant.openNow ?? false,
+		phone: restaurant.phone ?? null,
+		website: restaurant.website ?? null,
+		photos: restaurant.photos ?? [],
+		accessibility: restaurant.accessibility ?? null,
+	};
+};
+
 export const useSearch = () => {
-	const [restaurant, setRestaurant] = useState("");
-	const [textSearchResults, setTextSearchResults] = useState<TextSearchResponse | null>(null);
-	const [isTextSearching, setIsTextSearching] = useState(false);
+	const [restaurantQuery, setRestaurantQuery] = useState("");
+	const [searchResults, setSearchResults] = useState<Place[] | null>(null);
+	const [isSearching, setIsSearching] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const searchForRestaurants = useCallback(async () => {
-		if (!restaurant.trim()) return;
+		if (!restaurantQuery.trim()) return;
 
-		setIsTextSearching(true);
-		setTextSearchResults(null);
+		setIsSearching(true);
+		setSearchResults(null);
 		setErrorMessage(null);
 
 		try {
-			const result = await searchPlacesByText(restaurant);
-			if (result.data) {
-				setTextSearchResults(result.data);
-			} else if (result.error) {
-				setErrorMessage(result.error.message);
+			const response = await RestaurantsService.getRestaurants({ query: restaurantQuery });
+
+			if (response.success && response.restaurants) {
+				const places = response.restaurants
+					.map(transformBackendRestaurantToPlace)
+					.filter((place): place is Place => place !== null);
+				setSearchResults(places);
+			} else {
+				setErrorMessage(response.error || "No restaurants found.");
+				setSearchResults([]);
 			}
-		} catch (error) {
-			setErrorMessage("Failed to search for restaurants");
+		} catch (error: any) {
+			console.error("Error searching restaurants:", error);
+			setErrorMessage(error?.message || "An unexpected error occurred during search.");
+			setSearchResults(null);
 		} finally {
-			setIsTextSearching(false);
+			setIsSearching(false);
 		}
-	}, [restaurant]);
+	}, [restaurantQuery]);
 
 	return {
-		restaurant,
-		setRestaurant,
-		textSearchResults,
-		isTextSearching,
+		restaurantQuery,
+		setRestaurantQuery,
+		searchResults,
+		isSearching,
 		errorMessage,
 		searchForRestaurants,
-		setTextSearchResults,
+		setSearchResults,
 	};
 };

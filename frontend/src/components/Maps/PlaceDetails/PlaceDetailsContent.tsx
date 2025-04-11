@@ -1,4 +1,4 @@
-import type { PlaceDetails } from "@/services/googleMapsService";
+import type { Place } from "@/types/Place";
 import { Box, HStack, Icon, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import type React from "react";
 import { FiGlobe, FiPhone } from "react-icons/fi";
@@ -25,11 +25,11 @@ function Divider() {
 }
 
 interface PlaceDetailsContentProps {
-	placeDetails: PlaceDetails;
+	place: Place;
 	open: boolean;
 }
 
-export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentProps) {
+export function PlaceDetailsContent({ place, open }: PlaceDetailsContentProps) {
 	return (
 		<Box
 			p={3}
@@ -50,18 +50,18 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 		>
 			<VStack align="flex-start" gap={2} width="100%">
 				<SimpleGrid columns={{ base: 1, md: 1 }} gap={2} width="100%">
-					{placeDetails.internationalPhoneNumber && (
+					{place.phone && (
 						<ContactInfo icon={FiPhone}>
 							<Text fontSize="sm" color="fg.DEFAULT">
-								{placeDetails.internationalPhoneNumber}
+								{place.phone}
 							</Text>
 						</ContactInfo>
 					)}
 
-					{placeDetails.websiteUri && (
+					{place.website && (
 						<ContactInfo icon={FiGlobe}>
 							<Link
-								href={placeDetails.websiteUri}
+								href={place.website}
 								color="accent.matcha.dark"
 								target="_blank"
 								onClick={(e) => e.stopPropagation()}
@@ -81,14 +81,13 @@ export function PlaceDetailsContent({ placeDetails, open }: PlaceDetailsContentP
 				<Divider />
 
 				<PriceAndStatus
-					priceRange={placeDetails.priceRange}
-					priceLevel={placeDetails.priceLevel}
-					isOpenNow={placeDetails.regularOpeningHours?.openNow}
+					priceLevel={place.priceLevel === null ? undefined : place.priceLevel}
+					isOpenNow={place.openNow}
 				/>
 
 				<Divider />
 
-				{placeDetails.types && placeDetails.types.length > 0 && <Categories types={placeDetails.types} />}
+				{place.categories && place.categories.length > 0 && <Categories types={place.categories} />}
 			</VStack>
 		</Box>
 	);

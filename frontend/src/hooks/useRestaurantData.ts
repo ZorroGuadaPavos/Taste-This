@@ -1,52 +1,36 @@
 import type { GetRestaurantsDishesResponse } from "@/client";
-import { getRestaurantDishes, getRestaurantInfo } from "@/services/restaurantService";
+import { RestaurantsService } from "@/client";
 import { useCallback, useState } from "react";
 
 export const useRestaurantData = () => {
 	const [recommendations, setRecommendations] = useState<GetRestaurantsDishesResponse | null>(null);
-	const [photos, setPhotos] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [errorType, setErrorType] = useState<"notFound" | "error">("error");
 
-	const fetchData = useCallback(async (searchQuery: string) => {
-		if (!searchQuery) return;
+	const fetchRestaurantDishes = useCallback(async (placeId: string) => {
+		if (!placeId) return;
 
 		setIsLoading(true);
+		setRecommendations(null);
 		setErrorMessage(null);
 
 		try {
-			const restaurantResult = await getRestaurantInfo(searchQuery);
+			const dishesResult = await RestaurantsService.getRestaurantsDishes({ query: placeId });
 
-			if (restaurantResult.error) {
-				setErrorType(restaurantResult.error.type);
-				setErrorMessage(restaurantResult.error.message);
+			if (dishesResult.success && dishesResult.popularDishes) {
+				setRecommendations(dishesResult);
+			} else {
+				const backendError = (dishesResult as any).error;
+				setErrorType("error");
+				setErrorMessage(backendError || "Failed to retrieve dishes or no dishes found.");
 				setRecommendations(null);
-				setPhotos([]);
-				return;
 			}
-
-			if (restaurantResult.data) {
-				const newPhotos = [
-					...(restaurantResult.data.placePhoto ? [restaurantResult.data.placePhoto] : []),
-					...(restaurantResult.data.reviewPhotos || []),
-				];
-				setPhotos(newPhotos);
-
-				const dishesResult = await getRestaurantDishes(restaurantResult.data.placeUrlId);
-
-				if (dishesResult.data) {
-					setRecommendations(dishesResult.data);
-				} else if (dishesResult.error) {
-					setErrorType(dishesResult.error.type);
-					setErrorMessage(dishesResult.error.message);
-					setRecommendations(null);
-				}
-			}
-		} catch (error) {
+		} catch (error: any) {
+			console.error("Error fetching restaurant dishes:", error);
 			setErrorType("error");
-			setErrorMessage("Failed to fetch restaurant data");
-			setPhotos([]);
+			const apiErrorMessage = error?.body?.message || error?.message;
+			setErrorMessage(apiErrorMessage || "An unexpected error occurred while fetching dishes.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -54,10 +38,9 @@ export const useRestaurantData = () => {
 
 	return {
 		recommendations,
-		photos,
 		isLoading,
 		errorMessage,
 		errorType,
-		fetchData,
+		fetchRestaurantDishes,
 	};
 };
