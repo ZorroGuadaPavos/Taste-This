@@ -4,11 +4,11 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { OpenAPI } from "./client";
+import { AnalyticsConsent } from "./components/AnalyticsConsent";
 import { GlobalStyles } from "./components/GlobalStyles";
 import { routeTree } from "./routeTree.gen";
 import { system } from "./theme";
 
-// Import Google Fonts
 import "@fontsource/quicksand/400.css";
 import "@fontsource/quicksand/500.css";
 import "@fontsource/quicksand/600.css";
@@ -32,6 +32,7 @@ if (rootElement && !rootElement.innerHTML) {
 		<StrictMode>
 			<ChakraProvider value={system}>
 				<GlobalStyles />
+				<AnalyticsConsent />
 				<QueryClientProvider client={queryClient}>
 					<RouterProvider router={router} />
 				</QueryClientProvider>

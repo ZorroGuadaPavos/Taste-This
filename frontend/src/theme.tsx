@@ -76,6 +76,14 @@ const config = defineConfig({
 						value: "#E8D7ED",
 					},
 				},
+				cookie: {
+					accept: {
+						value: "#05203C",
+					},
+					decline: {
+						value: "#E0E4E9",
+					},
+				},
 			},
 		},
 	},
