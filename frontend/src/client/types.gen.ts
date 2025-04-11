@@ -5,6 +5,7 @@ export type GetRestaurantsData = {
      * identifier of the restaurant
      */
     query: string;
+    xRecaptchaToken: string;
 };
 
 export type GetRestaurantsResponse = ({
@@ -31,6 +32,7 @@ export type GetRestaurantsDishesData = {
      * identifier of the restaurant
      */
     query: string;
+    xRecaptchaToken: string;
 };
 
 export type GetRestaurantsDishesResponse = ({

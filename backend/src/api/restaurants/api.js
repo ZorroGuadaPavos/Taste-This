@@ -1,10 +1,18 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { zValidator } from "@hono/zod-validator";
 import { GeminiModel } from "../../ai-providers/gemini/provider.js";
 
 import settings from "../../core/config.js";
 
-import { restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
-import { DishesResponseSchema, ErrorResponseSchema, RestaurantsResponseSchema } from "./schemas.js";
+import { createRecaptchaMiddleware } from "../../middleware/recaptcha.js";
+
+import { RecaptchaHeaderSchema, restaurantDishesEndpointDefinition, restaurantEndpointDefinition } from "./openapi.js";
+import {
+	DishesResponseSchema,
+	ErrorResponseSchema,
+	RestaurantIdRequestSchema,
+	RestaurantsResponseSchema,
+} from "./schemas.js";
 import { analyzePopularDishes, fetchRestaurantReviews, fetchRestaurants } from "./service.js";
 
 const RestaurantRouter = new OpenAPIHono();
@@ -15,6 +23,13 @@ RestaurantRouter.use("*", async (c, next) => {
 	c.set("geminiModel", geminiModel);
 	await next();
 });
+
+RestaurantRouter.use(
+	"/",
+	zValidator("query", RestaurantIdRequestSchema),
+	zValidator("header", RecaptchaHeaderSchema),
+	createRecaptchaMiddleware("search_restaurants"),
+);
 
 RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 	const { query } = c.req.valid("query");
@@ -45,6 +60,13 @@ RestaurantRouter.openapi(restaurantEndpointDefinition, async (c) => {
 		);
 	}
 });
+
+RestaurantRouter.use(
+	"/dishes",
+	zValidator("query", RestaurantIdRequestSchema),
+	zValidator("header", RecaptchaHeaderSchema),
+	createRecaptchaMiddleware("select_restaurant"),
+);
 
 RestaurantRouter.openapi(restaurantDishesEndpointDefinition, async (c) => {
 	const { query } = c.req.valid("query");
