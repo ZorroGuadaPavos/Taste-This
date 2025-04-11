@@ -1,10 +1,18 @@
-import { createRoute } from "@hono/zod-openapi";
+import { createRoute, z } from "@hono/zod-openapi";
 import {
 	DishesResponseSchema,
 	ErrorResponseSchema,
 	RestaurantIdRequestSchema,
 	RestaurantsResponseSchema,
 } from "./schemas.js";
+
+export const RecaptchaHeaderSchema = z.object({
+	"X-Recaptcha-Token": z.string().openapi({
+		param: { name: "X-Recaptcha-Token", in: "header" },
+		example: "03AGdBq27...",
+		description: "Google reCAPTCHA v3 token obtained from the frontend.",
+	}),
+});
 
 export const restaurantEndpointDefinition = createRoute({
 	method: "get",
@@ -14,6 +22,7 @@ export const restaurantEndpointDefinition = createRoute({
 	description: "Returns a list of restaurants matching the search query",
 	request: {
 		query: RestaurantIdRequestSchema,
+		headers: RecaptchaHeaderSchema,
 	},
 	responses: {
 		200: {
@@ -51,6 +60,7 @@ export const restaurantDishesEndpointDefinition = createRoute({
 	description: "Analyzes restaurant reviews to identify the most popular dishes mentioned",
 	request: {
 		query: RestaurantIdRequestSchema,
+		headers: RecaptchaHeaderSchema,
 	},
 	responses: {
 		200: {

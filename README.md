@@ -54,7 +54,13 @@ https://taste-this.com find the most popular dishes at restaurants. By analyzing
 
 ### Backend Setup
 
-1. Set up environment variables in `backend/.env` (you can copy from `.env.example`):
+1. Set up environment variables in `backend/.env` (you can copy from `.env.example`). Key variables include:
+    * `MAPS_API_KEY`: Google Maps API key (required for fetching restaurant data).
+    * `AI_API_KEY`: Google Generative AI API key (required for dish analysis).
+    * `AI_MODEL`: The specific AI model to use (e.g., `gemini-pro`).
+    * `POPULAR_DISHES_PROMPT`: The prompt template used for AI analysis.
+    * `RECAPTCHA_SECRET_KEY`: Your Google reCAPTCHA v3 Secret Key.
+    * `RECAPTCHA_ENABLED`: Set to `true` (default) or `false`. If set to `false`, backend reCAPTCHA verification will be skipped, useful for local testing without needing valid frontend tokens.
 
 2. Navigate to the backend directory:
 ```bash

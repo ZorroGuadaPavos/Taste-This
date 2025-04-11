@@ -31,6 +31,16 @@
 						"description": "identifier of the restaurant",
 						"name": "query",
 						"in": "query"
+					},
+					{
+						"schema": {
+							"type": "string",
+							"description": "Google reCAPTCHA v3 token obtained from the frontend.",
+							"example": "03AGdBq27..."
+						},
+						"required": true,
+						"name": "X-Recaptcha-Token",
+						"in": "header"
 					}
 				],
 				"responses": {
@@ -186,6 +196,16 @@
 						"description": "identifier of the restaurant",
 						"name": "query",
 						"in": "query"
+					},
+					{
+						"schema": {
+							"type": "string",
+							"description": "Google reCAPTCHA v3 token obtained from the frontend.",
+							"example": "03AGdBq27..."
+						},
+						"required": true,
+						"name": "X-Recaptcha-Token",
+						"in": "header"
 					}
 				],
 				"responses": {

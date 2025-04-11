@@ -1,5 +1,6 @@
 import { type GetRestaurantsResponse, RestaurantsService } from "@/client";
 import type { Place } from "@/types/Place";
+import { getRecaptchaToken } from "@/utils/recaptchaUtils";
 import { useCallback, useState } from "react";
 
 const transformBackendRestaurantToPlace = (restaurant: GetRestaurantsResponse["restaurants"][number]): Place | null => {
@@ -37,7 +38,12 @@ export const useSearch = () => {
 		setErrorMessage(null);
 
 		try {
-			const response = await RestaurantsService.getRestaurants({ query: restaurantQuery });
+			const recaptchaToken = await getRecaptchaToken("search_restaurants");
+
+			const response = await RestaurantsService.getRestaurants({
+				query: restaurantQuery,
+				xRecaptchaToken: recaptchaToken,
+			});
 
 			if (response.success && response.restaurants) {
 				const places = response.restaurants
@@ -49,8 +55,12 @@ export const useSearch = () => {
 				setSearchResults([]);
 			}
 		} catch (error: any) {
-			console.error("Error searching restaurants:", error);
-			setErrorMessage(error?.message || "An unexpected error occurred during search.");
+			if (error.message?.includes("reCAPTCHA")) {
+				setErrorMessage("Could not verify request. Please try again.");
+			} else {
+				console.error("Error searching restaurants:", error);
+				setErrorMessage(error?.message || "An unexpected error occurred during search.");
+			}
 			setSearchResults(null);
 		} finally {
 			setIsSearching(false);

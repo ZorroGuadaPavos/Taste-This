@@ -11,6 +11,7 @@ export class RestaurantsService {
      * Returns a list of restaurants matching the search query
      * @param data The data for the request.
      * @param data.query identifier of the restaurant
+     * @param data.xRecaptchaToken
      * @returns unknown Restaurants found successfully
      * @throws ApiError
      */
@@ -18,6 +19,9 @@ export class RestaurantsService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/restaurants',
+            headers: {
+                'X-Recaptcha-Token': data.xRecaptchaToken
+            },
             query: {
                 query: data.query
             },
@@ -33,6 +37,7 @@ export class RestaurantsService {
      * Analyzes restaurant reviews to identify the most popular dishes mentioned
      * @param data The data for the request.
      * @param data.query identifier of the restaurant
+     * @param data.xRecaptchaToken
      * @returns unknown Popular dishes analysis completed successfully
      * @throws ApiError
      */
@@ -40,6 +45,9 @@ export class RestaurantsService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/restaurants/dishes',
+            headers: {
+                'X-Recaptcha-Token': data.xRecaptchaToken
+            },
             query: {
                 query: data.query
             },
